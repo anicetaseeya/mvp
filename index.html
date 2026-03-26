@@ -1,0 +1,1775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Segovia Passport</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1209;
+  --cream: #f5f0e8;
+  --warm: #ede7d9;
+  --gold: #c9972a;
+  --gold-light: #faeeda;
+  --rust: #b84a2e;
+  --rust-dark: #8b3a1e;
+  --sage: #4a6741;
+  --sage-light: #eef6ea;
+  --parchment: #2a1f0e;
+  --muted: #9a8f83;
+  --border: rgba(26,18,9,0.1);
+  --white: #fff;
+  --sidebar-w: 240px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  background: var(--warm);
+  color: var(--ink);
+  overflow: hidden;
+}
+
+/* ── LAYOUT ─────────────────────────────── */
+.app { display: flex; height: 100vh; overflow: hidden; }
+
+/* ── SIDEBAR ─────────────────────────────── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--parchment);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  border-right: 1px solid rgba(201,151,42,0.15);
+  z-index: 10;
+}
+
+.sidebar-logo {
+  padding: 1.5rem 1.5rem 1rem;
+  border-bottom: 1px solid rgba(201,151,42,0.12);
+}
+
+.logo-mark {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: var(--gold);
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo-icon {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  background: rgba(201,151,42,0.2);
+  border: 1px solid rgba(201,151,42,0.35);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+}
+
+.logo-sub {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(201,151,42,0.4);
+  margin-top: 2px;
+}
+
+/* User passport card in sidebar */
+.sidebar-passport {
+  margin: 1rem;
+  background: rgba(201,151,42,0.08);
+  border: 1px solid rgba(201,151,42,0.2);
+  border-radius: 10px;
+  padding: 0.9rem;
+}
+
+.sp-level {
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(201,151,42,0.6);
+  margin-bottom: 4px;
+}
+
+.sp-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #e8d4a0;
+  margin-bottom: 8px;
+}
+
+.sp-xp-bar {
+  height: 4px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+
+.sp-xp-fill {
+  height: 100%;
+  width: 65%;
+  background: linear-gradient(90deg, var(--gold), #e8b84a);
+  border-radius: 2px;
+}
+
+.sp-xp-label {
+  font-size: 0.6rem;
+  color: rgba(201,151,42,0.45);
+  display: flex;
+  justify-content: space-between;
+}
+
+.sp-wallet {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(201,151,42,0.12);
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.sp-wallet-amount {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #e8c870;
+}
+
+.sp-wallet-label { font-size: 0.65rem; color: rgba(201,151,42,0.4); }
+
+/* Nav items */
+.sidebar-nav {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s;
+  color: rgba(245,240,232,0.45);
+  font-size: 0.85rem;
+  font-weight: 400;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+
+.nav-item:hover { background: rgba(245,240,232,0.06); color: rgba(245,240,232,0.75); }
+
+.nav-item.active {
+  background: rgba(201,151,42,0.12);
+  color: var(--gold);
+}
+
+.nav-icon {
+  width: 18px; height: 18px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.nav-badge {
+  margin-left: auto;
+  background: var(--rust);
+  color: white;
+  font-size: 0.6rem;
+  font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.sidebar-footer {
+  padding: 1rem;
+  border-top: 1px solid rgba(201,151,42,0.1);
+  font-size: 0.7rem;
+  color: rgba(245,240,232,0.2);
+  letter-spacing: 0.05em;
+}
+
+/* ── MAIN CONTENT ─────────────────────────────── */
+.main {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--cream);
+}
+
+.screen { display: none; animation: fadeIn 0.25s ease; }
+.screen.active { display: block; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── TOP BAR ─────────────────────────────── */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: rgba(245,240,232,0.9);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  padding: 0.85rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.topbar-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.topbar-right { display: flex; align-items: center; gap: 0.75rem; }
+
+.topbar-search {
+  background: var(--warm);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.45rem 0.9rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.82rem;
+  width: 200px;
+  color: var(--ink);
+  outline: none;
+}
+
+.topbar-search:focus { border-color: var(--gold); }
+
+.avatar-sm {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--gold-light);
+  border: 1.5px solid var(--gold);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--rust-dark);
+  cursor: pointer;
+}
+
+/* ── CONTENT AREA ─────────────────────────────── */
+.content { padding: 2rem; }
+
+/* ── SECTION HEADERS ─────────────────────────────── */
+.section-eyebrow {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 500;
+  margin-bottom: 0.4rem;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.section-sub { font-size: 0.85rem; color: var(--muted); margin-bottom: 1.5rem; }
+
+/* ── DASHBOARD SCREEN ─────────────────────────────── */
+.dash-hero {
+  background: var(--parchment);
+  border-radius: 16px;
+  padding: 1.8rem 2rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.dash-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 29px, rgba(201,151,42,0.04) 30px),
+    repeating-linear-gradient(90deg, transparent, transparent 29px, rgba(201,151,42,0.04) 30px);
+}
+
+.dash-hero-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2rem;
+  align-items: center;
+  position: relative;
+}
+
+.dh-greeting { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(201,151,42,0.5); margin-bottom: 4px; }
+.dh-name { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 900; color: #f0e8d0; margin-bottom: 10px; }
+.dh-sub { font-size: 0.85rem; color: rgba(245,240,232,0.45); max-width: 40ch; line-height: 1.6; }
+
+.dh-stats { display: flex; gap: 1.5rem; margin-top: 1.2rem; }
+.dh-stat strong { display: block; font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: var(--gold); }
+.dh-stat span { font-size: 0.7rem; color: rgba(201,151,42,0.4); text-transform: uppercase; letter-spacing: 0.1em; }
+
+.dh-passport-mini {
+  background: rgba(201,151,42,0.08);
+  border: 1px solid rgba(201,151,42,0.2);
+  border-radius: 12px;
+  padding: 1.2rem;
+  min-width: 180px;
+  text-align: center;
+}
+
+.dh-pm-city {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #e8d4a0;
+  margin-bottom: 8px;
+  letter-spacing: 0.1em;
+}
+
+.dh-pm-stamps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  margin-bottom: 10px;
+}
+
+.stamp-dot {
+  aspect-ratio: 1;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.stamp-dot.on { background: rgba(201,151,42,0.15); border: 1px solid rgba(201,151,42,0.3); }
+.stamp-dot.off { background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.1); opacity: 0.35; }
+
+.xp-wrap { text-align: left; }
+.xp-nums { display: flex; justify-content: space-between; font-size: 0.6rem; color: rgba(201,151,42,0.4); margin-bottom: 4px; }
+.xp-outer { height: 5px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; }
+.xp-inner { height: 100%; width: 65%; background: linear-gradient(90deg, var(--gold), #e8b84a); border-radius: 3px; }
+
+/* Stat cards row */
+.stat-cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+
+.stat-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.1rem 1.2rem;
+}
+
+.sc-val { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+.sc-label { font-size: 0.72rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.sc-change { font-size: 0.72rem; color: var(--sage); margin-top: 4px; }
+
+/* Two col layout */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+.two-col-wide { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+
+/* Cards */
+.card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 1rem 1.2rem 0.6rem;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-title { font-size: 0.85rem; font-weight: 500; }
+.card-action { font-size: 0.75rem; color: var(--rust); cursor: pointer; }
+.card-action:hover { text-decoration: underline; }
+
+.card-body { padding: 1rem 1.2rem; }
+
+/* Quest list in dashboard */
+.quest-item {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  transition: background 0.1s;
+  margin: 0 -1.2rem;
+  padding-left: 1.2rem;
+  padding-right: 1.2rem;
+}
+
+.quest-item:last-child { border-bottom: none; }
+.quest-item:hover { background: var(--warm); }
+
+.qi-icon {
+  width: 40px; height: 40px;
+  background: var(--warm);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.qi-info { flex: 1; min-width: 0; }
+.qi-name { font-size: 0.85rem; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+.qi-meta { font-size: 0.72rem; color: var(--muted); }
+
+.qi-reward {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--sage);
+  background: var(--sage-light);
+  padding: 3px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.qi-status {
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.qi-status.active { background: rgba(184,74,46,0.1); color: var(--rust); }
+.qi-status.done { background: var(--sage-light); color: var(--sage); }
+
+/* Activity feed */
+.activity-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.7rem 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.activity-item:last-child { border-bottom: none; }
+
+.act-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+  flex-shrink: 0;
+  margin-top: 5px;
+}
+
+.act-dot.sage { background: var(--sage); }
+.act-dot.rust { background: var(--rust); }
+
+.act-text { font-size: 0.8rem; line-height: 1.5; color: var(--ink); }
+.act-time { font-size: 0.7rem; color: var(--muted); }
+
+/* Progress bar */
+.progress-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+}
+
+.pr-label { font-size: 0.78rem; width: 120px; flex-shrink: 0; }
+.pr-bar { flex: 1; height: 6px; background: var(--warm); border-radius: 3px; overflow: hidden; }
+.pr-fill { height: 100%; border-radius: 3px; }
+.pr-fill.rust { background: var(--rust); }
+.pr-fill.gold { background: var(--gold); }
+.pr-fill.sage { background: var(--sage); }
+.pr-fill.sky { background: #2d5f8a; }
+.pr-val { font-size: 0.75rem; color: var(--muted); width: 30px; text-align: right; }
+
+/* ── QUESTS SCREEN ─────────────────────────────── */
+.filter-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-chip {
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: white;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+}
+
+.filter-chip:hover { border-color: var(--gold); color: var(--gold); }
+.filter-chip.on { background: var(--rust); color: white; border-color: var(--rust); }
+
+.quests-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.quest-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.quest-card:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(26,18,9,0.1); }
+
+.qc-color-bar { height: 4px; }
+.qc-body { padding: 1.1rem; }
+
+.qc-header { display: flex; gap: 0.75rem; align-items: flex-start; margin-bottom: 0.7rem; }
+.qc-icon {
+  width: 44px; height: 44px;
+  background: var(--warm);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.qc-title { font-size: 0.88rem; font-weight: 500; line-height: 1.3; margin-bottom: 3px; }
+.qc-location { font-size: 0.72rem; color: var(--muted); }
+
+.qc-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 0.8rem; }
+
+.tag {
+  font-size: 0.68rem;
+  font-weight: 500;
+  padding: 3px 7px;
+  border-radius: 5px;
+}
+
+.tag.xp { background: #faeeda; color: #854f0b; }
+.tag.reward { background: var(--sage-light); color: var(--sage); }
+.tag.time { background: #f1eff8; color: #534ab7; }
+.tag.dist { background: var(--warm); color: var(--muted); }
+.tag.active-tag { background: rgba(184,74,46,0.1); color: var(--rust); }
+
+.qc-btn {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: none;
+  background: var(--rust);
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.qc-btn:hover { background: var(--rust-dark); }
+.qc-btn.secondary { background: var(--warm); color: var(--ink); }
+.qc-btn.secondary:hover { background: var(--border); }
+.qc-btn.done-btn { background: var(--sage-light); color: var(--sage); cursor: default; }
+
+/* ── QUEST DETAIL PANEL ─────────────────────────────── */
+.quest-detail-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(26,18,9,0.4);
+  z-index: 50;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.quest-detail-overlay.open { display: flex; }
+
+.quest-detail-panel {
+  background: var(--cream);
+  border-radius: 20px;
+  width: 100%;
+  max-width: 640px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 30px 80px rgba(26,18,9,0.3);
+}
+
+.qdp-hero {
+  background: var(--parchment);
+  padding: 2rem;
+  border-radius: 20px 20px 0 0;
+  position: relative;
+}
+
+.qdp-close {
+  position: absolute;
+  top: 1rem; right: 1rem;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: rgba(245,240,232,0.6);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.qdp-icon {
+  width: 60px; height: 60px;
+  background: rgba(201,151,42,0.15);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 30px;
+  margin-bottom: 1rem;
+}
+
+.qdp-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #f0e8d0;
+  margin-bottom: 0.4rem;
+  line-height: 1.2;
+}
+
+.qdp-loc { font-size: 0.8rem; color: rgba(245,240,232,0.4); }
+
+.qdp-body { padding: 1.5rem 2rem; }
+
+.qdp-rewards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.qdp-reward-box {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.9rem;
+  text-align: center;
+}
+
+.drb-val { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; margin-bottom: 2px; }
+.drb-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+.qdp-section-title { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.6rem; font-weight: 500; }
+
+.qdp-desc { font-size: 0.88rem; line-height: 1.7; color: #4a3f35; margin-bottom: 1.5rem; }
+
+.qdp-steps { display: flex; flex-direction: column; gap: 0.7rem; margin-bottom: 1.5rem; }
+
+.qdp-step {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.qdp-step-num {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--rust);
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 500;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+.qdp-step-text { font-size: 0.85rem; color: #4a3f35; line-height: 1.5; padding-top: 2px; }
+
+.qdp-accept-btn {
+  width: 100%;
+  padding: 0.9rem;
+  border-radius: 10px;
+  background: var(--rust);
+  color: white;
+  border: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  letter-spacing: 0.02em;
+}
+
+.qdp-accept-btn:hover { background: var(--rust-dark); }
+
+/* ── MAP SCREEN ─────────────────────────────── */
+.map-container {
+  background: #d4cfc0;
+  border-radius: 14px;
+  height: 420px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.map-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.25) 0, rgba(255,255,255,0.25) 1px, transparent 1px, transparent 60px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.25) 0, rgba(255,255,255,0.25) 1px, transparent 1px, transparent 60px);
+}
+
+.map-road { position: absolute; background: rgba(255,255,255,0.75); }
+.map-block { position: absolute; background: rgba(165,155,135,0.45); border-radius: 3px; }
+
+.map-pin {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transform: translateX(-50%);
+  transition: transform 0.15s;
+}
+
+.map-pin:hover { transform: translateX(-50%) translateY(-4px); }
+
+.pin-bubble {
+  background: var(--rust);
+  color: white;
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 3px 10px rgba(184,74,46,0.35);
+}
+
+.pin-bubble.gold { background: var(--gold); box-shadow: 0 3px 10px rgba(201,151,42,0.35); }
+.pin-bubble.sage { background: var(--sage); box-shadow: 0 3px 10px rgba(74,103,65,0.35); }
+.pin-bubble.sky { background: #2d5f8a; }
+.pin-bubble.done { background: #888; box-shadow: none; }
+
+.pin-tail { width: 2px; height: 8px; background: var(--rust); }
+.pin-tail.gold { background: var(--gold); }
+.pin-tail.sage { background: var(--sage); }
+.pin-tail.sky { background: #2d5f8a; }
+.pin-tail.done { background: #888; }
+
+.user-dot {
+  position: absolute;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: #2d5f8a;
+  border: 3px solid white;
+  box-shadow: 0 0 0 5px rgba(45,95,138,0.18);
+}
+
+.map-legend {
+  position: absolute;
+  top: 12px; left: 12px;
+  background: rgba(245,240,232,0.95);
+  backdrop-filter: blur(8px);
+  border-radius: 10px;
+  padding: 0.7rem 1rem;
+  font-size: 0.72rem;
+  border: 1px solid var(--border);
+}
+
+.legend-item { display: flex; align-items: center; gap: 0.5rem; padding: 2px 0; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+
+.map-filter-bar {
+  position: absolute;
+  bottom: 12px; left: 12px;
+  display: flex;
+  gap: 6px;
+}
+
+.map-chip {
+  background: rgba(245,240,232,0.95);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 5px 12px;
+  font-size: 0.72rem;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.map-chip.on { background: var(--rust); color: white; border-color: var(--rust); }
+
+/* ── WALLET/PROFILE SCREEN ─────────────────────────────── */
+.wallet-hero {
+  background: var(--rust);
+  border-radius: 16px;
+  padding: 1.8rem 2rem;
+  color: white;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wh-left {}
+.wh-label { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; opacity: 0.7; margin-bottom: 4px; }
+.wh-amount { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 700; margin-bottom: 12px; }
+
+.wh-actions { display: flex; gap: 0.75rem; }
+.wh-btn {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 8px;
+  padding: 0.5rem 1.1rem;
+  font-size: 0.82rem;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.wh-btn:hover { background: rgba(255,255,255,0.3); }
+
+.profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem; }
+
+.badges-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.75rem; padding: 0.2rem 0; }
+
+.badge-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.badge-circle {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  transition: transform 0.15s;
+  cursor: default;
+}
+
+.badge-circle:hover { transform: scale(1.1); }
+.badge-circle.on { background: var(--gold-light); border: 2px solid var(--gold); }
+.badge-circle.off { background: var(--warm); border: 2px dashed var(--border); opacity: 0.45; }
+
+.badge-name { font-size: 0.65rem; color: var(--muted); text-align: center; line-height: 1.2; }
+
+.leaderboard-list { display: flex; flex-direction: column; }
+
+.lb-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.1s;
+  cursor: default;
+}
+
+.lb-item:last-child { border-bottom: none; }
+.lb-item:hover { background: var(--warm); }
+.lb-item.me { background: rgba(184,74,46,0.04); }
+
+.lb-rank {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  font-weight: 700;
+  width: 24px;
+  text-align: center;
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
+.lb-rank.top { color: var(--rust); }
+
+.lb-avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: var(--gold-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--rust-dark);
+  flex-shrink: 0;
+}
+
+.lb-avatar.me-av { background: rgba(184,74,46,0.12); color: var(--rust); }
+
+.lb-name { flex: 1; font-size: 0.85rem; font-weight: 400; }
+.lb-name.me-name { color: var(--rust); font-weight: 500; }
+.lb-country { font-size: 0.72rem; color: var(--muted); }
+.lb-xp { font-size: 0.82rem; color: var(--muted); }
+.lb-change { font-size: 0.7rem; color: var(--sage); }
+
+/* Transaction list */
+.tx-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 1.2rem;
+  border-bottom: 1px solid var(--border);
+}
+.tx-item:last-child { border-bottom: none; }
+
+.tx-icon {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  background: var(--warm);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.tx-info { flex: 1; }
+.tx-name { font-size: 0.82rem; font-weight: 500; margin-bottom: 1px; }
+.tx-date { font-size: 0.7rem; color: var(--muted); }
+.tx-amount { font-size: 0.88rem; font-weight: 500; }
+.tx-amount.plus { color: var(--sage); }
+.tx-amount.minus { color: var(--rust); }
+
+/* ── CHECK-IN SCREEN ─────────────────────────────── */
+.checkin-hero {
+  background: var(--sage);
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  color: white;
+  margin-bottom: 1.5rem;
+}
+
+.ch-icon-wrap {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+  margin: 0 auto 1rem;
+}
+
+.ch-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem; }
+.ch-sub { font-size: 0.88rem; opacity: 0.75; max-width: 40ch; margin: 0 auto; line-height: 1.6; }
+
+.checkin-rewards {
+  background: var(--parchment);
+  border-radius: 14px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+}
+
+.cr-item { text-align: center; }
+.cr-val { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--gold); }
+.cr-label { font-size: 0.7rem; color: rgba(201,151,42,0.4); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 3px; }
+
+.upload-zone {
+  border: 2px dashed var(--border);
+  border-radius: 14px;
+  padding: 2.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  margin-bottom: 1rem;
+  background: white;
+}
+
+.upload-zone:hover { border-color: var(--gold); background: var(--gold-light); }
+
+.upload-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+.upload-title { font-size: 0.95rem; font-weight: 500; margin-bottom: 0.3rem; }
+.upload-sub { font-size: 0.8rem; color: var(--muted); }
+
+.confirm-btn {
+  width: 100%;
+  background: var(--sage);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: background 0.15s;
+  letter-spacing: 0.02em;
+}
+
+.confirm-btn:hover { background: #3b5533; }
+
+.or-divider { text-align: center; font-size: 0.75rem; color: var(--muted); margin: 0.75rem 0; }
+
+.qr-btn {
+  width: 100%;
+  background: white;
+  color: var(--ink);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.9rem;
+  font-size: 0.88rem;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.qr-btn:hover { border-color: var(--gold); }
+
+/* ── TOAST NOTIFICATION ─────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--parchment);
+  color: white;
+  border: 1px solid rgba(201,151,42,0.3);
+  border-radius: 12px;
+  padding: 1rem 1.3rem;
+  font-size: 0.85rem;
+  z-index: 200;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 0.3s ease;
+  max-width: 280px;
+  line-height: 1.5;
+}
+
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast strong { color: var(--gold); }
+
+/* ── SCROLLBAR ─────────────────────────────── */
+.main::-webkit-scrollbar { width: 6px; }
+.main::-webkit-scrollbar-track { background: transparent; }
+.main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* ── EMPTY / MISC ─────────────────────────────── */
+.empty-state { text-align: center; padding: 3rem; color: var(--muted); font-size: 0.88rem; }
+
+.divider { height: 1px; background: var(--border); margin: 0.5rem 0; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ══════════════ SIDEBAR ══════════════ -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <div class="logo-icon">🏰</div>
+        Segovia Passport
+      </div>
+      <div class="logo-sub">Social Integration Platform</div>
+    </div>
+
+    <div class="sidebar-passport">
+      <div class="sp-level">Level 3 — Explorer</div>
+      <div class="sp-name">Lena Krämer</div>
+      <div class="xp-wrap">
+        <div class="xp-nums"><span>650 XP</span><span>1000 XP</span></div>
+        <div class="xp-outer"><div class="xp-inner"></div></div>
+      </div>
+      <div class="sp-wallet">
+        <span class="sp-wallet-amount">€14.50</span>
+        <span class="sp-wallet-label">wallet balance</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" onclick="showScreen('dashboard')">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="1" width="6" height="6" rx="1.5"/><rect x="11" y="1" width="6" height="6" rx="1.5"/><rect x="1" y="11" width="6" height="6" rx="1.5"/><rect x="11" y="11" width="6" height="6" rx="1.5"/></svg>
+        Dashboard
+      </button>
+      <button class="nav-item" onclick="showScreen('quests')">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 1l2 6h6l-5 3.5 2 6L9 13l-5 3.5 2-6L1 7h6z"/></svg>
+        Quests
+        <span class="nav-badge">4</span>
+      </button>
+      <button class="nav-item" onclick="showScreen('map')">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 1C6.24 1 4 3.24 4 6c0 3.75 5 11 5 11s5-7.25 5-11c0-2.76-2.24-5-5-5z"/><circle cx="9" cy="6" r="1.5"/></svg>
+        Quest Map
+      </button>
+      <button class="nav-item" onclick="showScreen('checkin')">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7 9l2 2 4-4"/><circle cx="9" cy="9" r="8"/></svg>
+        Check In
+      </button>
+      <div class="divider" style="margin:0.3rem 0"></div>
+      <button class="nav-item" onclick="showScreen('wallet')">
+        <svg class="nav-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="16" height="11" rx="2"/><path d="M1 8h16"/><circle cx="13" cy="12.5" r="1"/></svg>
+        Wallet & Profile
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">Pilot · Segovia, Spain · 2025</div>
+  </aside>
+
+  <!-- ══════════════ MAIN ══════════════ -->
+  <main class="main">
+
+    <!-- ════════ DASHBOARD ════════ -->
+    <div id="screen-dashboard" class="screen active">
+      <div class="topbar">
+        <div class="topbar-title">Good morning, Lena 👋</div>
+        <div class="topbar-right">
+          <input class="topbar-search" placeholder="Search quests…" type="text">
+          <div class="avatar-sm">LK</div>
+        </div>
+      </div>
+      <div class="content">
+        <!-- Hero passport -->
+        <div class="dash-hero">
+          <div class="dash-hero-grid">
+            <div>
+              <div class="dh-greeting">Your passport</div>
+              <div class="dh-name">Explorer Lena 🏰</div>
+              <div class="dh-sub">You've visited 5 neighborhoods and completed 4 quests. 3 more quests before reaching Level 4.</div>
+              <div class="dh-stats">
+                <div class="dh-stat"><strong>4</strong><span>Quests done</span></div>
+                <div class="dh-stat"><strong>€14.50</strong><span>Earned</span></div>
+                <div class="dh-stat"><strong>#8</strong><span>Leaderboard</span></div>
+              </div>
+            </div>
+            <div class="dh-passport-mini">
+              <div class="dh-pm-city">SEGOVIA</div>
+              <div class="dh-pm-stamps">
+                <div class="stamp-dot on">☕</div>
+                <div class="stamp-dot on">🏺</div>
+                <div class="stamp-dot on">🛒</div>
+                <div class="stamp-dot on">🎭</div>
+                <div class="stamp-dot off">🌿</div>
+                <div class="stamp-dot off">🤝</div>
+                <div class="stamp-dot off">🎵</div>
+                <div class="stamp-dot off">🏛</div>
+              </div>
+              <div class="xp-wrap" style="margin-top:10px">
+                <div class="xp-nums"><span>650 XP</span><span>1000</span></div>
+                <div class="xp-outer"><div class="xp-inner"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stat cards -->
+        <div class="stat-cards">
+          <div class="stat-card">
+            <div class="sc-val">4</div>
+            <div class="sc-label">Quests completed</div>
+            <div class="sc-change">↑ 2 this week</div>
+          </div>
+          <div class="stat-card">
+            <div class="sc-val">€14.50</div>
+            <div class="sc-label">Total earned</div>
+            <div class="sc-change">↑ €5 this week</div>
+          </div>
+          <div class="stat-card">
+            <div class="sc-val">5</div>
+            <div class="sc-label">Neighborhoods</div>
+            <div class="sc-change">Out of 8 total</div>
+          </div>
+          <div class="stat-card">
+            <div class="sc-val">650</div>
+            <div class="sc-label">XP Points</div>
+            <div class="sc-change">350 to Level 4</div>
+          </div>
+        </div>
+
+        <div class="two-col-wide">
+          <!-- Quests -->
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Active & nearby quests</span>
+              <span class="card-action" onclick="showScreen('quests')">View all →</span>
+            </div>
+            <div class="card-body">
+              <div class="quest-item" onclick="openQuestDetail('cafe')">
+                <div class="qi-icon">☕</div>
+                <div class="qi-info">
+                  <div class="qi-name">Order in Spanish at Café San Lorenzo</div>
+                  <div class="qi-meta">San Lorenzo · 0.3 km · 10 min</div>
+                </div>
+                <span class="qi-status active">In progress</span>
+              </div>
+              <div class="quest-item" onclick="openQuestDetail('market')">
+                <div class="qi-icon">🛒</div>
+                <div class="qi-info">
+                  <div class="qi-name">Shop at the weekly market</div>
+                  <div class="qi-meta">Mercado · 0.9 km · 20 min</div>
+                </div>
+                <span class="qi-reward">+€1.50</span>
+              </div>
+              <div class="quest-item" onclick="openQuestDetail('culture')">
+                <div class="qi-icon">🎭</div>
+                <div class="qi-info">
+                  <div class="qi-name">Attend a cultural event outside center</div>
+                  <div class="qi-meta">San Millán · Tonight only</div>
+                </div>
+                <span class="qi-reward">+€3.00</span>
+              </div>
+              <div class="quest-item" onclick="openQuestDetail('landmark')">
+                <div class="qi-icon">🏺</div>
+                <div class="qi-info">
+                  <div class="qi-name">Find a hidden landmark</div>
+                  <div class="qi-meta">Historic Center · 5 min walk</div>
+                </div>
+                <span class="qi-status done">Completed</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Activity + Neighborhood coverage -->
+          <div style="display:flex;flex-direction:column;gap:1.5rem">
+            <div class="card">
+              <div class="card-header"><span class="card-title">Recent activity</span></div>
+              <div class="card-body">
+                <div class="activity-item">
+                  <div class="act-dot sage"></div>
+                  <div>
+                    <div class="act-text">Completed "Find a hidden landmark" — earned €1.00 + stamp</div>
+                    <div class="act-time">2 hours ago</div>
+                  </div>
+                </div>
+                <div class="activity-item">
+                  <div class="act-dot"></div>
+                  <div>
+                    <div class="act-text">Accepted quest: Order in Spanish at Café San Lorenzo</div>
+                    <div class="act-time">Yesterday</div>
+                  </div>
+                </div>
+                <div class="activity-item">
+                  <div class="act-dot rust"></div>
+                  <div>
+                    <div class="act-text">Withdrew €10.00 to bank account</div>
+                    <div class="act-time">3 days ago</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><span class="card-title">Neighborhood coverage</span></div>
+              <div class="card-body">
+                <div class="progress-row"><span class="pr-label">San Lorenzo</span><div class="pr-bar"><div class="pr-fill rust" style="width:80%"></div></div><span class="pr-val">80%</span></div>
+                <div class="progress-row"><span class="pr-label">El Azoguejo</span><div class="pr-bar"><div class="pr-fill gold" style="width:60%"></div></div><span class="pr-val">60%</span></div>
+                <div class="progress-row"><span class="pr-label">San Millán</span><div class="pr-bar"><div class="pr-fill sage" style="width:35%"></div></div><span class="pr-val">35%</span></div>
+                <div class="progress-row"><span class="pr-label">La Trinidad</span><div class="pr-bar"><div class="pr-fill sky" style="width:15%"></div></div><span class="pr-val">15%</span></div>
+                <div class="progress-row"><span class="pr-label">El Salvador</span><div class="pr-bar"><div class="pr-fill" style="width:0%;background:var(--border)"></div></div><span class="pr-val">0%</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ QUESTS ════════ -->
+    <div id="screen-quests" class="screen">
+      <div class="topbar">
+        <div class="topbar-title">Quests</div>
+        <div class="topbar-right">
+          <input class="topbar-search" placeholder="Search quests…" type="text">
+          <div class="avatar-sm">LK</div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="section-eyebrow">Explore Segovia</div>
+        <div class="section-title">Available Quests</div>
+        <div class="section-sub">Complete quests to earn rewards, XP, and passport stamps. Higher rewards for neighborhoods outside the tourist center.</div>
+
+        <div class="filter-bar">
+          <button class="filter-chip on" onclick="toggleFilter(this)">All</button>
+          <button class="filter-chip" onclick="toggleFilter(this)">Near me</button>
+          <button class="filter-chip" onclick="toggleFilter(this)">Food & cafés</button>
+          <button class="filter-chip" onclick="toggleFilter(this)">Culture</button>
+          <button class="filter-chip" onclick="toggleFilter(this)">Community</button>
+          <button class="filter-chip" onclick="toggleFilter(this)">High reward</button>
+          <button class="filter-chip" onclick="toggleFilter(this)">Quick (< 15 min)</button>
+        </div>
+
+        <div class="quests-grid">
+
+          <div class="quest-card">
+            <div class="qc-color-bar" style="background:var(--rust)"></div>
+            <div class="qc-body">
+              <div class="qc-header">
+                <div class="qc-icon">☕</div>
+                <div>
+                  <div class="qc-title">Order in Spanish at Café San Lorenzo</div>
+                  <div class="qc-location">📍 San Lorenzo · 0.3 km</div>
+                </div>
+              </div>
+              <div class="qc-tags">
+                <span class="tag xp">+120 XP</span>
+                <span class="tag reward">+€2.50</span>
+                <span class="tag time">10 min</span>
+                <span class="tag active-tag">In progress</span>
+              </div>
+              <button class="qc-btn" onclick="showScreen('checkin')">Continue quest →</button>
+            </div>
+          </div>
+
+          <div class="quest-card">
+            <div class="qc-color-bar" style="background:var(--gold)"></div>
+            <div class="qc-body">
+              <div class="qc-header">
+                <div class="qc-icon">🛒</div>
+                <div>
+                  <div class="qc-title">Shop at the weekly market</div>
+                  <div class="qc-location">📍 Mercado El Azoguejo · 0.9 km</div>
+                </div>
+              </div>
+              <div class="qc-tags">
+                <span class="tag xp">+80 XP</span>
+                <span class="tag reward">+€1.50</span>
+                <span class="tag time">20 min</span>
+              </div>
+              <button class="qc-btn secondary" onclick="openQuestDetail('market')">View quest</button>
+            </div>
+          </div>
+
+          <div class="quest-card">
+            <div class="qc-color-bar" style="background:#534ab7"></div>
+            <div class="qc-body">
+              <div class="qc-header">
+                <div class="qc-icon">🎭</div>
+                <div>
+                  <div class="qc-title">Attend a cultural event outside the center</div>
+                  <div class="qc-location">📍 San Millán · Tonight</div>
+                </div>
+              </div>
+              <div class="qc-tags">
+                <span class="tag xp">+200 XP</span>
+                <span class="tag reward">+€3.00</span>
+                <span class="tag time">2 hrs</span>
+              </div>
+              <button class="qc-btn secondary" onclick="openQuestDetail('culture')">View quest</button>
+            </div>
+          </div>
+
+          <div class="quest-card">
+            <div class="qc-color-bar" style="background:var(--sage)"></div>
+            <div class="qc-body">
+              <div class="qc-header">
+                <div class="qc-icon">🤝</div>
+                <div>
+                  <div class="qc-title">Interview a local shopkeeper</div>
+                  <div class="qc-location">📍 Any partner shop</div>
+                </div>
+              </div>
+              <div class="qc-tags">
+                <span class="tag xp">+150 XP</span>
+                <span class="tag reward">+€2.00</span>
+                <span class="tag time">20 min</span>
+              </div>
+              <button class="qc-btn secondary" onclick="openQuestDetail('shop')">View quest</button>
+            </div>
+          </div>
+
+          <div class="quest-card">
+            <div class="qc-color-bar" style="background:#4a6741"></div>
+            <div class="qc-body">
+              <div class="qc-header">
+                <div class="qc-icon">🌿</div>
+                <div>
+                  <div class="qc-title">Volunteer with a local NGO</div>
+                  <div class="qc-location">📍 Various locations</div>
+                </div>
+              </div>
+              <div class="qc-tags">
+                <span class="tag xp">+400 XP</span>
+                <span class="tag reward">+€5.00</span>
+                <span class="tag time">2 hrs</span>
+              </div>
+              <button class="qc-btn secondary" onclick="openQuestDetail('ngo')">View quest</button>
+            </div>
+          </div>
+
+          <div class="quest-card" style="opacity:0.6">
+            <div class="qc-color-bar" style="background:var(--muted)"></div>
+            <div class="qc-body">
+              <div class="qc-header">
+                <div class="qc-icon">🏺</div>
+                <div>
+                  <div class="qc-title">Find a hidden landmark</div>
+                  <div class="qc-location">📍 Historic Center</div>
+                </div>
+              </div>
+              <div class="qc-tags">
+                <span class="tag xp">+60 XP</span>
+                <span class="tag reward">+€1.00</span>
+                <span class="tag time">5 min</span>
+              </div>
+              <button class="qc-btn done-btn">✓ Completed</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ MAP ════════ -->
+    <div id="screen-map" class="screen">
+      <div class="topbar">
+        <div class="topbar-title">Quest Map</div>
+        <div class="topbar-right">
+          <input class="topbar-search" placeholder="Search area…" type="text">
+          <div class="avatar-sm">LK</div>
+        </div>
+      </div>
+      <div class="content">
+        <div class="map-container">
+          <div class="map-grid"></div>
+          <!-- Roads -->
+          <div class="map-road" style="top:100px;left:0;right:0;height:10px"></div>
+          <div class="map-road" style="top:200px;left:0;right:0;height:7px"></div>
+          <div class="map-road" style="top:310px;left:80px;right:0;height:6px"></div>
+          <div class="map-road" style="left:140px;top:0;bottom:0;width:8px"></div>
+          <div class="map-road" style="left:320px;top:0;bottom:0;width:6px"></div>
+          <div class="map-road" style="left:500px;top:60px;bottom:0;width:5px"></div>
+          <div class="map-road" style="top:150px;left:140px;right:200px;height:5px;transform:rotate(-8deg);transform-origin:left center"></div>
+          <!-- Blocks -->
+          <div class="map-block" style="left:10px;top:115px;width:120px;height:80px"></div>
+          <div class="map-block" style="left:155px;top:10px;width:155px;height:85px"></div>
+          <div class="map-block" style="left:155px;top:115px;width:155px;height:78px"></div>
+          <div class="map-block" style="left:335px;top:10px;width:155px;height:85px"></div>
+          <div class="map-block" style="left:335px;top:115px;width:155px;height:78px"></div>
+          <div class="map-block" style="left:10px;top:215px;width:120px;height:90px"></div>
+          <div class="map-block" style="left:155px;top:215px;width:155px;height:90px"></div>
+          <div class="map-block" style="left:335px;top:215px;width:155px;height:90px"></div>
+          <div class="map-block" style="left:515px;top:115px;width:120px;height:90px"></div>
+          <div class="map-block" style="left:515px;top:215px;width:120px;height:90px"></div>
+          <!-- Pins -->
+          <div class="map-pin" style="left:68px;top:50px" onclick="openQuestDetail('cafe')">
+            <div class="pin-bubble">☕ Café San Lorenzo</div>
+            <div class="pin-tail"></div>
+          </div>
+          <div class="map-pin" style="left:240px;top:130px" onclick="openQuestDetail('market')">
+            <div class="pin-bubble gold">🛒 Mercado</div>
+            <div class="pin-tail gold"></div>
+          </div>
+          <div class="map-pin" style="left:410px;top:50px" onclick="openQuestDetail('culture')">
+            <div class="pin-bubble" style="background:#534ab7;box-shadow:0 3px 10px rgba(83,74,183,0.35)">🎭 Teatro</div>
+            <div class="pin-tail" style="background:#534ab7"></div>
+          </div>
+          <div class="map-pin" style="left:550px;top:170px" onclick="openQuestDetail('ngo')">
+            <div class="pin-bubble sage">🌿 NGO</div>
+            <div class="pin-tail sage"></div>
+          </div>
+          <div class="map-pin" style="left:300px;top:260px" onclick="openQuestDetail('shop')">
+            <div class="pin-bubble" style="background:var(--sage);box-shadow:0 3px 10px rgba(74,103,65,0.35)">🤝 Shopkeeper</div>
+            <div class="pin-tail sage"></div>
+          </div>
+          <div class="map-pin" style="left:160px;top:260px">
+            <div class="pin-bubble done">🏺 Completed</div>
+            <div class="pin-tail done"></div>
+          </div>
+          <!-- User -->
+          <div class="user-dot" style="left:105px;top:228px"></div>
+          <!-- Legend -->
+          <div class="map-legend">
+            <div class="legend-item"><div class="legend-dot" style="background:var(--rust)"></div><span style="font-size:0.7rem">Available</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div><span style="font-size:0.7rem">High reward</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#888"></div><span style="font-size:0.7rem">Completed</span></div>
+            <div class="legend-item"><div class="legend-dot" style="background:#2d5f8a"></div><span style="font-size:0.7rem">You</span></div>
+          </div>
+          <!-- Map filters -->
+          <div class="map-filter-bar">
+            <button class="map-chip on" onclick="this.classList.toggle('on')">All</button>
+            <button class="map-chip" onclick="this.classList.toggle('on')">Near me</button>
+            <button class="map-chip" onclick="this.classList.toggle('on')">High reward</button>
+            <button class="map-chip" onclick="this.classList.toggle('on')">Culture</button>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-header"><span class="card-title">Quests in view (6)</span><span class="card-action" onclick="showScreen('quests')">See list →</span></div>
+            <div class="card-body">
+              <div class="quest-item" onclick="openQuestDetail('cafe')">
+                <div class="qi-icon">☕</div>
+                <div class="qi-info"><div class="qi-name">Café San Lorenzo</div><div class="qi-meta">0.3 km · 10 min · San Lorenzo</div></div>
+                <span class="qi-status active">Active</span>
+              </div>
+              <div class="quest-item" onclick="openQuestDetail('market')">
+                <div class="qi-icon">🛒</div>
+                <div class="qi-info"><div class="qi-name">Weekly Market</div><div class="qi-meta">0.9 km · 20 min · El Azoguejo</div></div>
+                <span class="qi-reward">+€1.50</span>
+              </div>
+              <div class="quest-item" onclick="openQuestDetail('culture')">
+                <div class="qi-icon">🎭</div>
+                <div class="qi-info"><div class="qi-name">Cultural Event</div><div class="qi-meta">1.2 km · Tonight · San Millán</div></div>
+                <span class="qi-reward">+€3.00</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><span class="card-title">Neighborhood activity</span></div>
+            <div class="card-body">
+              <p style="font-size:0.82rem;color:var(--muted);line-height:1.6;margin-bottom:1rem">Student activity heatmap for this week. Darker = more students exploring.</p>
+              <div class="progress-row"><span class="pr-label">Historic Center</span><div class="pr-bar"><div class="pr-fill rust" style="width:90%"></div></div><span class="pr-val">90%</span></div>
+              <div class="progress-row"><span class="pr-label">San Lorenzo</span><div class="pr-bar"><div class="pr-fill gold" style="width:45%"></div></div><span class="pr-val">45%</span></div>
+              <div class="progress-row"><span class="pr-label">San Millán</span><div class="pr-bar"><div class="pr-fill sage" style="width:28%"></div></div><span class="pr-val">28%</span></div>
+              <div class="progress-row"><span class="pr-label">La Trinidad</span><div class="pr-bar"><div class="pr-fill sky" style="width:12%"></div></div><span class="pr-val">12%</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════ CHECK-IN ════════ -->
+    <div id="screen-checkin" class="screen">
+      <div class="topbar">
+        <div class="topbar-title">Complete Quest</div>
+        <div class="topbar-right"><div class="avatar-sm">LK</div></div>
+      </div>
+      <div class="content" style="max-width:600px;margin:0 auto">
+        <div class="checkin-hero">
+          <div class="ch-icon-wrap">☕</div>
+          <div class="ch-title">Almost there, Lena!</div>
+          <div class="ch-sub">You're completing: "Order in Spanish at Café San Lorenzo". Upload your proof photo or scan the QR code at the counter.</div>
+        </div>
+
+        <div class="checkin-rewards">
+          <div class="cr-item"><div class="cr-val">€2.50</div><div class="cr-label">Cash reward</div></div>
+          <div class="cr-item"><div class="cr-val">+120</div><div class="cr-label">XP points</div></div>
+          <div class="cr-item"><div class="cr-val">☕</div><div class="cr-label">Stamp earned</div></div>
+        </div>
+
+        <div class="upload-zone" onclick="handleUpload()">
+          <div class="upload-icon">📷</div>
+          <div class="upload-title">Upload proof photo</div>
+          <div class="upload-sub">Take a photo of your order at the café. Drag & drop or click to browse.</div>
+        </div>
+
+        <button class="confirm-btn" onclick="completeQuest()">Confirm & claim rewards →</button>
+
+        <div class="or-divider">— or —</div>
+
+        <button class="qr-btn">📱 Scan QR code at the counter</button>
+      </div>
+    </div>
+
+    <!-- ════════ WALLET & PROFILE ════════ -->
+    <div id="screen-wallet" class="screen">
+      <div class="topbar">
+        <div class="topbar-title">Wallet & Profile</div>
+        <div class="topbar-right"><div class="avatar-sm">LK</div></div>
+      </div>
+      <div class="content">
+        <div class="wallet-hero">
+          <div class="wh-left">
+            <div class="wh-label">Available balance</div>
+            <div class="wh-amount">€14.50</div>
+            <div class="wh-actions">
+              <button class="wh-btn" onclick="showToast('💸 Withdrawal of €14.50 requested — arrives in 1-2 business days')">Withdraw to bank</button>
+              <button class="wh-btn" onclick="showToast('🏪 Showing partner businesses near you…')">Use at partner</button>
+            </div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:0.7rem;opacity:0.6;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.1em">Total earned</div>
+            <div style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700">€24.50</div>
+            <div style="font-size:0.72rem;opacity:0.5;margin-top:4px">Since September 2024</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <!-- Transactions -->
+          <div class="card">
+            <div class="card-header"><span class="card-title">Transaction history</span></div>
+            <div class="leaderboard-list">
+              <div class="tx-item"><div class="tx-icon">🏺</div><div class="tx-info"><div class="tx-name">Hidden Landmark quest</div><div class="tx-date">Today, 11:20</div></div><div class="tx-amount plus">+€1.00</div></div>
+              <div class="tx-item"><div class="tx-icon">🏦</div><div class="tx-info"><div class="tx-name">Bank withdrawal</div><div class="tx-date">3 days ago</div></div><div class="tx-amount minus">−€10.00</div></div>
+              <div class="tx-item"><div class="tx-icon">🎭</div><div class="tx-info"><div class="tx-name">Cultural Event quest</div><div class="tx-date">Last week</div></div><div class="tx-amount plus">+€3.00</div></div>
+              <div class="tx-item"><div class="tx-icon">🛒</div><div class="tx-info"><div class="tx-name">Weekly Market quest</div><div class="tx-date">2 weeks ago</div></div><div class="tx-amount plus">+€1.50</div></div>
+              <div class="tx-item"><div class="tx-icon">☕</div><div class="tx-info"><div class="tx-name">Café San Lorenzo quest</div><div class="tx-date">2 weeks ago</div></div><div class="tx-amount plus">+€2.50</div></div>
+              <div class="tx-item"><div class="tx-icon">🏦</div><div class="tx-info"><div class="tx-name">Bank withdrawal</div><div class="tx-date">Last month</div></div><div class="tx-amount minus">−€6.50</div></div>
+            </div>
+          </div>
+
+          <!-- Leaderboard -->
+          <div class="card">
+            <div class="card-header"><span class="card-title">Leaderboard — this month</span></div>
+            <div class="leaderboard-list">
+              <div class="lb-item"><div class="lb-rank top">1</div><div class="lb-avatar">MR</div><div class="lb-name">Marco R.</div><div class="lb-country">🇮🇹</div><div class="lb-xp">1240 XP</div><div class="lb-change">↑2</div></div>
+              <div class="lb-item"><div class="lb-rank">2</div><div class="lb-avatar">SJ</div><div class="lb-name">Sofia J.</div><div class="lb-country">🇩🇪</div><div class="lb-xp">980 XP</div><div class="lb-change">↑1</div></div>
+              <div class="lb-item"><div class="lb-rank">3</div><div class="lb-avatar">PK</div><div class="lb-name">Pedro K.</div><div class="lb-country">🇧🇷</div><div class="lb-xp">870 XP</div><div class="lb-change">—</div></div>
+              <div class="lb-item"><div class="lb-rank">4</div><div class="lb-avatar">YN</div><div class="lb-name">Yui N.</div><div class="lb-country">🇯🇵</div><div class="lb-xp">790 XP</div><div class="lb-change">↑3</div></div>
+              <div class="lb-item me"><div class="lb-rank">8</div><div class="lb-avatar me-av">LK</div><div class="lb-name me-name">Lena K. (you)</div><div class="lb-country">🇩🇪</div><div class="lb-xp">650 XP</div><div class="lb-change">↑1</div></div>
+              <div class="lb-item"><div class="lb-rank">9</div><div class="lb-avatar">AH</div><div class="lb-name">Ahmed H.</div><div class="lb-country">🇲🇦</div><div class="lb-xp">580 XP</div><div class="lb-change">—</div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stamps / badges -->
+        <div class="card" style="margin-bottom:1.5rem">
+          <div class="card-header"><span class="card-title">Passport stamps</span><span class="card-action">4 / 8 collected</span></div>
+          <div class="card-body">
+            <div class="badges-grid">
+              <div class="badge-item"><div class="badge-circle on">☕</div><div class="badge-name">Café local</div></div>
+              <div class="badge-item"><div class="badge-circle on">🏺</div><div class="badge-name">Explorer</div></div>
+              <div class="badge-item"><div class="badge-circle on">🛒</div><div class="badge-name">Market goer</div></div>
+              <div class="badge-item"><div class="badge-circle on">🎭</div><div class="badge-name">Cultura</div></div>
+              <div class="badge-item"><div class="badge-circle off">🌿</div><div class="badge-name">Volunteer</div></div>
+              <div class="badge-item"><div class="badge-circle off">🤝</div><div class="badge-name">Connector</div></div>
+              <div class="badge-item"><div class="badge-circle off">🎵</div><div class="badge-name">Música</div></div>
+              <div class="badge-item"><div class="badge-circle off">🏛</div><div class="badge-name">Historian</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ════════ QUEST DETAIL OVERLAY ════════ -->
+<div class="quest-detail-overlay" id="questOverlay" onclick="closeQuestDetail(event)">
+  <div class="quest-detail-panel" id="questPanel">
+    <div class="qdp-hero">
+      <button class="qdp-close" onclick="closeQuestDetail()">✕</button>
+      <div class="qdp-icon" id="qd-icon">☕</div>
+      <div class="qdp-title" id="qd-title">Quest Title</div>
+      <div class="qdp-loc" id="qd-loc">Location</div>
+    </div>
+    <div class="qdp-body">
+      <div class="qdp-rewards">
+        <div class="qdp-reward-box"><div class="drb-val" id="qd-cash" style="color:var(--sage)">€2.50</div><div class="drb-label">Cash reward</div></div>
+        <div class="qdp-reward-box"><div class="drb-val" id="qd-xp" style="color:var(--gold)">120 XP</div><div class="drb-label">XP points</div></div>
+        <div class="qdp-reward-box"><div class="drb-val" id="qd-stamp">☕</div><div class="drb-label">Stamp</div></div>
+      </div>
+      <div class="qdp-section-title">About this quest</div>
+      <div class="qdp-desc" id="qd-desc">Description</div>
+      <div class="qdp-section-title">How to complete</div>
+      <div class="qdp-steps" id="qd-steps"></div>
+      <button class="qdp-accept-btn" id="qd-cta" onclick="acceptQuest()">Accept quest →</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const quests = {
+  cafe: {
+    icon:'☕', title:'Order in Spanish at Café San Lorenzo',
+    loc:'📍 Calle San Lorenzo, 14 · 0.3 km from you',
+    cash:'€2.50', xp:'120 XP', stamp:'☕',
+    desc:'Visit Café San Lorenzo, a family-run spot open since 1974. Order anything from the menu entirely in Spanish — no English! Connect with one of the oldest businesses in the neighborhood.',
+    steps:['Walk to Café San Lorenzo on Calle San Lorenzo, 14','Order something from the menu speaking only Spanish','Take a photo of your order as proof','Check in using the QR code at the counter or upload photo']
+  },
+  market: {
+    icon:'🛒', title:'Shop at the weekly market',
+    loc:'📍 Mercado El Azoguejo · 0.9 km from you',
+    cash:'€1.50', xp:'80 XP', stamp:'🛒',
+    desc:'The weekly market at El Azoguejo is one of Segovia\'s oldest traditions. Buy at least one item from a local vendor and practice your Spanish while you\'re at it.',
+    steps:['Visit Mercado El Azoguejo on Saturday morning (8am–2pm)','Find a local vendor (not a chain or tourist stall)','Buy at least one item','Take a photo with your purchase and the vendor\'s stall']
+  },
+  culture: {
+    icon:'🎭', title:'Attend a cultural event outside the center',
+    loc:'📍 San Millán neighborhood · Tonight at 8pm',
+    cash:'€3.00', xp:'200 XP', stamp:'🎭',
+    desc:'Go beyond the Alcázar. Tonight the Centro Cultural San Millán is hosting a traditional Castilian music evening. Free entry — your reward comes from being there.',
+    steps:['Head to Centro Cultural San Millán (Calle San Millán, 7)','Attend any part of the evening event (min. 30 minutes)','Check in at the door using the QR code on the event poster','Optional: talk to a local attendee and earn bonus XP']
+  },
+  shop: {
+    icon:'🤝', title:'Interview a local shopkeeper',
+    loc:'📍 Any partner shop in Segovia',
+    cash:'€2.00', xp:'150 XP', stamp:'🤝',
+    desc:'Have a genuine conversation with the owner of any partner shop. Ask about their business, their neighborhood, how Segovia has changed. You\'ll be surprised what you learn.',
+    steps:['Find any shop marked with the Passport Partner badge','Introduce yourself as a Segovia Passport student','Ask the owner at least 3 questions about their business or neighborhood','Take a quick photo together (with permission) as proof']
+  },
+  ngo: {
+    icon:'🌿', title:'Volunteer with a local NGO',
+    loc:'📍 Various locations across Segovia',
+    cash:'€5.00', xp:'400 XP', stamp:'🌿',
+    desc:'Spend 2 hours volunteering with one of our partner organizations. Tree planting, food bank distribution, after-school tutoring — choose what suits you. This is our highest-value quest for a reason.',
+    steps:['Browse the NGO partner list in the app and sign up for a session','Show up at the agreed time and location','Complete at least 2 hours of volunteering','Get your volunteer hours signed off by the coordinator']
+  },
+  landmark: {
+    icon:'🏺', title:'Find a hidden landmark',
+    loc:'📍 Clues lead you through the Historic Center',
+    cash:'€1.00', xp:'60 XP', stamp:'🏺',
+    desc:'Follow the in-app clues to find a lesser-known historical site that most tourists — and even many locals — walk past every day. No GPS spoofing allowed!',
+    steps:['Read the three clues carefully in the quest screen','Navigate to the location using only the clues','Take a photo at the landmark showing the identifier plaque','Submit the secret code found on-site to complete the quest']
+  }
+};
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const navMap = {dashboard:0, quests:1, map:2, checkin:3, wallet:4};
+  const items = document.querySelectorAll('.nav-item');
+  if (navMap[id] !== undefined) items[navMap[id]].classList.add('active');
+}
+
+function openQuestDetail(key) {
+  const q = quests[key];
+  if (!q) return;
+  document.getElementById('qd-icon').textContent = q.icon;
+  document.getElementById('qd-title').textContent = q.title;
+  document.getElementById('qd-loc').textContent = q.loc;
+  document.getElementById('qd-cash').textContent = q.cash;
+  document.getElementById('qd-xp').textContent = q.xp;
+  document.getElementById('qd-stamp').textContent = q.stamp;
+  document.getElementById('qd-desc').textContent = q.desc;
+  const steps = document.getElementById('qd-steps');
+  steps.innerHTML = q.steps.map((s,i) => `<div class="qdp-step"><div class="qdp-step-num">${i+1}</div><div class="qdp-step-text">${s}</div></div>`).join('');
+  document.getElementById('questOverlay').classList.add('open');
+}
+
+function closeQuestDetail(e) {
+  if (!e || e.target === document.getElementById('questOverlay')) {
+    document.getElementById('questOverlay').classList.remove('open');
+  }
+}
+
+function acceptQuest() {
+  closeQuestDetail();
+  showToast('✅ Quest accepted! Head to the location and complete the steps.');
+}
+
+function toggleFilter(el) {
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('on'));
+  el.classList.add('on');
+}
+
+function handleUpload() {
+  showToast('📷 Photo uploaded successfully! Ready to confirm.');
+}
+
+function completeQuest() {
+  showToast('🎉 Quest complete! <strong>€2.50 + 120 XP</strong> added to your wallet.');
+  setTimeout(() => showScreen('dashboard'), 1200);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.innerHTML = msg;
+  t.classList.add('show');
+  clearTimeout(t._timeout);
+  t._timeout = setTimeout(() => t.classList.remove('show'), 3500);
+}
+</script>
+</body>
+</html>
