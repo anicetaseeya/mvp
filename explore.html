@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Explore Quests — Segovia Passport</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+:root {
+  --cyan: #00E5FF; --magenta: #FF00CC; --yellow: #FFE600;
+  --black: #0a0a0a; --white: #ffffff;
+  --font-display: 'Barlow Condensed', sans-serif;
+  --font-body: 'Barlow', sans-serif;
+}
+body { font-family: var(--font-body); background: var(--black); color: var(--white); overflow-x: hidden; }
+
+/* NAV */
+.nav { position:fixed; top:0; left:0; right:0; z-index:200; display:flex; align-items:center; justify-content:space-between; padding:0 2.5rem; height:64px; background:var(--black); border-bottom:1px solid rgba(0,229,255,0.15); }
+.nav-logo { display:flex; align-items:center; gap:0.6rem; text-decoration:none; }
+.nav-logo-icon { font-size:1.3rem; }
+.nav-logo-text { font-family:var(--font-display); font-size:1.1rem; font-weight:900; letter-spacing:0.05em; color:var(--cyan); }
+.nav-links { display:flex; align-items:center; gap:1.5rem; }
+.nav-link { font-family:var(--font-body); font-size:0.85rem; font-weight:700; color:rgba(255,255,255,0.4); text-decoration:none; letter-spacing:0.03em; text-transform:uppercase; transition:color 0.15s; }
+.nav-link:hover, .nav-link.active { color:var(--cyan); }
+.nav-cta { font-family:var(--font-display); font-size:0.92rem; font-weight:700; letter-spacing:0.05em; text-decoration:none; background:var(--magenta); color:var(--white); padding:7px 18px; transition:background 0.15s; text-transform:uppercase; }
+.nav-cta:hover { background:#ff33dd; }
+
+/* PAGE HEADER */
+.page-header { padding:6rem 3rem 3rem; border-bottom:1px solid rgba(255,255,255,0.05); }
+.page-eyebrow { font-family:var(--font-display); font-size:0.7rem; font-weight:700; letter-spacing:0.28em; color:var(--cyan); margin-bottom:0.5rem; }
+.page-title { font-family:var(--font-display); font-size:clamp(2.8rem,6vw,5rem); font-weight:900; line-height:0.95; letter-spacing:-0.01em; }
+.page-title span { color:var(--magenta); }
+.page-sub { font-size:0.95rem; color:rgba(255,255,255,0.4); margin-top:1rem; max-width:55ch; line-height:1.7; }
+
+/* TAB BAR */
+.tab-bar { display:flex; gap:0; border-bottom:1px solid rgba(255,255,255,0.06); padding:0 3rem; }
+.tab { font-family:var(--font-display); font-size:0.82rem; font-weight:700; letter-spacing:0.12em; color:rgba(255,255,255,0.3); text-transform:uppercase; padding:1rem 1.5rem; border-bottom:2px solid transparent; cursor:pointer; transition:all 0.15s; text-decoration:none; }
+.tab:hover { color:rgba(255,255,255,0.7); }
+.tab.active { color:var(--cyan); border-bottom-color:var(--cyan); }
+
+/* MAIN CONTENT */
+.content { max-width:1200px; margin:0 auto; padding:3rem; }
+
+/* SECTION TITLES */
+.sec-eyebrow { font-family:var(--font-display); font-size:0.65rem; font-weight:700; letter-spacing:0.28em; color:var(--magenta); margin-bottom:0.4rem; }
+.sec-title { font-family:var(--font-display); font-size:clamp(1.8rem,3vw,2.6rem); font-weight:900; color:var(--white); margin-bottom:0.4rem; }
+.sec-sub { font-size:0.88rem; color:rgba(255,255,255,0.35); line-height:1.6; max-width:60ch; margin-bottom:2rem; }
+
+/* FILTER CHIPS */
+.filter-row { display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:2rem; }
+.chip { font-family:var(--font-display); font-size:0.72rem; font-weight:700; letter-spacing:0.1em; padding:6px 16px; border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.35); cursor:pointer; transition:all 0.15s; text-transform:uppercase; background:transparent; }
+.chip:hover { border-color:rgba(255,255,255,0.3); color:rgba(255,255,255,0.7); }
+.chip.on { background:rgba(0,229,255,0.1); border-color:rgba(0,229,255,0.35); color:var(--cyan); }
+
+/* QUEST GRID */
+.quest-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:1rem; margin-bottom:4rem; }
+.qcard { background:#111; border:1px solid rgba(255,255,255,0.06); overflow:hidden; transition:border-color 0.2s, transform 0.2s; cursor:pointer; }
+.qcard:hover { border-color:rgba(0,229,255,0.25); transform:translateY(-2px); }
+.qcard.featured { border-color:rgba(255,0,204,0.3); }
+.qcard-top { padding:1.4rem 1.4rem 0; display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem; }
+.qcard-icon { width:48px; height:48px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; flex-shrink:0; }
+.icon-cyan { background:rgba(0,229,255,0.1); }
+.icon-magenta { background:rgba(255,0,204,0.1); }
+.icon-yellow { background:rgba(255,230,0,0.1); }
+.icon-green { background:rgba(0,255,120,0.08); }
+.qcard-badges { display:flex; gap:5px; flex-direction:column; align-items:flex-end; }
+.qbadge { font-family:var(--font-display); font-size:0.58rem; font-weight:700; letter-spacing:0.12em; padding:3px 9px; text-transform:uppercase; }
+.badge-new { background:var(--magenta); color:var(--white); }
+.badge-popular { background:rgba(255,230,0,0.15); color:var(--yellow); border:1px solid rgba(255,230,0,0.25); }
+.badge-culture { background:rgba(0,229,255,0.1); color:var(--cyan); border:1px solid rgba(0,229,255,0.2); }
+.badge-food { background:rgba(255,120,0,0.12); color:#ff8c00; border:1px solid rgba(255,120,0,0.2); }
+.badge-social { background:rgba(255,0,204,0.1); color:var(--magenta); border:1px solid rgba(255,0,204,0.2); }
+.badge-night { background:rgba(100,0,255,0.15); color:#a66cff; border:1px solid rgba(100,0,255,0.25); }
+.qcard-body { padding:0 1.4rem 1.4rem; }
+.qcard-title { font-family:var(--font-display); font-size:1.15rem; font-weight:900; color:var(--white); margin-bottom:4px; }
+.qcard-desc { font-size:0.78rem; color:rgba(255,255,255,0.3); line-height:1.55; margin-bottom:1rem; }
+.qcard-meta { display:flex; align-items:center; justify-content:space-between; }
+.qcard-reward { font-family:var(--font-display); font-size:0.78rem; font-weight:700; color:var(--cyan); letter-spacing:0.05em; }
+.qcard-xp { font-family:var(--font-display); font-size:0.72rem; color:rgba(255,255,255,0.2); }
+.qcard-footer { border-top:1px solid rgba(255,255,255,0.04); padding:0.75rem 1.4rem; display:flex; align-items:center; justify-content:space-between; }
+.qcard-loc { font-size:0.72rem; color:rgba(255,255,255,0.2); }
+.qcard-cta { font-family:var(--font-display); font-size:0.72rem; font-weight:700; letter-spacing:0.08em; color:var(--magenta); text-transform:uppercase; text-decoration:none; transition:color 0.15s; }
+.qcard-cta:hover { color:#ff66ee; }
+
+/* DIVIDER */
+.section-divider { height:1px; background:rgba(255,255,255,0.05); margin:3rem 0; }
+
+/* LEADERBOARD */
+.lb-layout { display:grid; grid-template-columns:1fr 340px; gap:3rem; align-items:start; margin-bottom:4rem; }
+.lb-main {}
+.lb-podium { display:flex; align-items:flex-end; gap:1rem; margin-bottom:2rem; }
+.podium-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:0.5rem; }
+.podium-avatar { width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:1.3rem; font-weight:900; }
+.pod-1 .podium-avatar { width:64px; height:64px; font-size:1.6rem; background:var(--yellow); color:var(--black); border:3px solid rgba(255,230,0,0.4); }
+.pod-2 .podium-avatar { background:#555; color:var(--white); }
+.pod-3 .podium-avatar { background:#7a5230; color:var(--white); }
+.podium-name { font-family:var(--font-display); font-size:0.75rem; font-weight:700; color:rgba(255,255,255,0.5); letter-spacing:0.05em; }
+.pod-1 .podium-name { color:var(--yellow); }
+.podium-pts { font-family:var(--font-display); font-size:1rem; font-weight:900; color:rgba(255,255,255,0.25); }
+.pod-1 .podium-pts { color:var(--yellow); }
+.podium-bar { width:100%; background:rgba(255,255,255,0.04); border-top:2px solid rgba(255,255,255,0.08); }
+.pod-1 .podium-bar { background:rgba(255,230,0,0.06); border-top-color:var(--yellow); height:80px; }
+.pod-2 .podium-bar { height:55px; }
+.pod-3 .podium-bar { height:35px; }
+
+.lb-table { background:#0d0d0d; border:1px solid rgba(255,255,255,0.05); overflow:hidden; }
+.lb-thead { display:grid; grid-template-columns:44px 1fr 80px 80px; padding:0.6rem 1rem; border-bottom:1px solid rgba(255,255,255,0.05); }
+.lb-th { font-family:var(--font-display); font-size:0.58rem; font-weight:700; letter-spacing:0.2em; color:rgba(255,255,255,0.18); text-transform:uppercase; }
+.lb-th:last-child { text-align:right; }
+.lb-trow { display:grid; grid-template-columns:44px 1fr 80px 80px; padding:0.75rem 1rem; border-bottom:1px solid rgba(255,255,255,0.03); align-items:center; transition:background 0.12s; }
+.lb-trow:hover { background:rgba(255,255,255,0.02); }
+.lb-trow.me { background:rgba(0,229,255,0.04); border-left:2px solid var(--cyan); }
+.lb-trow:last-child { border-bottom:none; }
+.lb-rank { font-family:var(--font-display); font-size:1rem; font-weight:900; color:rgba(255,255,255,0.15); }
+.lb-rank.gold { color:var(--yellow); }
+.lb-rank.silver { color:#aaa; }
+.lb-rank.bronze { color:#c97c3a; }
+.lb-rank.mine { color:var(--cyan); }
+.lb-player { display:flex; align-items:center; gap:0.6rem; }
+.lb-av { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:0.75rem; font-weight:900; flex-shrink:0; }
+.lb-av-default { background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.3); }
+.lb-av-me { background:var(--cyan); color:var(--black); }
+.lb-pname { font-size:0.82rem; color:rgba(255,255,255,0.45); }
+.lb-pname.mine { color:var(--cyan); font-weight:700; }
+.lb-challenges { font-family:var(--font-display); font-size:0.82rem; color:rgba(255,255,255,0.2); }
+.lb-score { font-family:var(--font-display); font-size:0.88rem; font-weight:700; color:rgba(255,255,255,0.25); text-align:right; }
+.lb-score.mine { color:var(--cyan); }
+
+.lb-side {}
+.lb-side-card { background:#111; border:1px solid rgba(255,255,255,0.06); padding:1.5rem; margin-bottom:1rem; }
+.lb-side-title { font-family:var(--font-display); font-size:0.65rem; font-weight:700; letter-spacing:0.22em; color:rgba(255,255,255,0.2); margin-bottom:1rem; }
+.my-stat-row { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; }
+.my-stat { background:rgba(255,255,255,0.03); padding:1rem; text-align:center; }
+.my-stat-val { font-family:var(--font-display); font-size:1.8rem; font-weight:900; color:var(--cyan); line-height:1; margin-bottom:3px; }
+.my-stat-lbl { font-size:0.65rem; color:rgba(255,255,255,0.2); letter-spacing:0.08em; text-transform:uppercase; }
+.streak-box { background:rgba(255,230,0,0.05); border:1px solid rgba(255,230,0,0.12); padding:1rem; display:flex; align-items:center; gap:0.75rem; margin-top:0.75rem; }
+.streak-emoji { font-size:1.5rem; }
+.streak-text { font-size:0.78rem; color:rgba(255,255,255,0.35); line-height:1.5; }
+.streak-text strong { color:var(--yellow); }
+
+/* FAQ */
+.faq-wrap { display:grid; grid-template-columns:260px 1fr; gap:3rem; margin-bottom:4rem; }
+.faq-left-title { font-family:var(--font-display); font-size:clamp(1.8rem,3vw,2.5rem); font-weight:900; line-height:1.05; color:var(--white); position:sticky; top:80px; }
+.faq-left-title span { color:var(--cyan); }
+.faq-list {}
+.faq-item { padding:1.5rem 0; border-bottom:1px solid rgba(255,255,255,0.06); }
+.faq-item:first-child { border-top:1px solid rgba(255,255,255,0.06); }
+.faq-q { font-size:0.95rem; font-weight:700; color:var(--white); margin-bottom:0.5rem; cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:1rem; }
+.faq-toggle { font-size:1rem; color:rgba(255,255,255,0.2); flex-shrink:0; transition:transform 0.2s; }
+.faq-item.open .faq-toggle { transform:rotate(45deg); color:var(--cyan); }
+.faq-a { font-size:0.88rem; line-height:1.75; color:rgba(255,255,255,0.4); max-height:0; overflow:hidden; transition:max-height 0.3s ease; }
+.faq-item.open .faq-a { max-height:200px; }
+
+/* CTA BANNER */
+.cta-banner { background:var(--magenta); padding:4rem 3rem; display:grid; grid-template-columns:1fr auto; gap:2rem; align-items:center; border-top:2px solid rgba(0,0,0,0.2); }
+.cta-title { font-family:var(--font-display); font-size:clamp(2rem,4vw,3rem); font-weight:900; color:var(--white); line-height:1.05; }
+.cta-sub { font-size:0.88rem; color:rgba(255,255,255,0.7); margin-top:0.5rem; }
+.btn-white { display:inline-block; font-family:var(--font-display); font-size:1rem; font-weight:700; letter-spacing:0.06em; text-decoration:none; background:var(--white); color:var(--magenta); padding:14px 32px; border:none; cursor:pointer; transition:all 0.15s; text-transform:uppercase; white-space:nowrap; }
+.btn-white:hover { background:var(--yellow); color:var(--black); }
+
+/* FOOTER */
+.footer { background:#050505; padding:2.5rem 3rem; border-top:1px solid rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
+.footer-logo { font-family:var(--font-display); font-size:1.1rem; font-weight:900; color:var(--cyan); letter-spacing:0.06em; }
+.footer-links { display:flex; gap:1.5rem; }
+.footer-link { font-size:0.78rem; color:rgba(255,255,255,0.2); text-decoration:none; transition:color 0.15s; }
+.footer-link:hover { color:rgba(255,255,255,0.5); }
+.footer-copy { font-size:0.75rem; color:rgba(255,255,255,0.12); }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <span class="nav-logo-icon">🏰</span>
+    <span class="nav-logo-text">SEGOVIA PASSPORT</span>
+  </a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="explore.html" class="nav-link active">Explore</a>
+    <a href="passport.html" class="nav-cta">My Passport →</a>
+  </div>
+</nav>
+
+<div class="page-header">
+  <div class="page-eyebrow">SEGOVIA PASSPORT</div>
+  <h1 class="page-title">Explore<br><span>New Quests</span></h1>
+  <p class="page-sub">From ordering in Spanish to finding the city's oldest monument — every quest earns you stamps, XP, and real rewards across Segovia.</p>
+</div>
+
+<div class="tab-bar">
+  <a href="#quests" class="tab active">All Quests</a>
+  <a href="#leaderboard" class="tab">Leaderboard</a>
+  <a href="#faq" class="tab">FAQ</a>
+</div>
+
+<div class="content">
+
+  <!-- QUESTS -->
+  <div id="quests" style="padding-top:1rem;">
+    <div class="sec-eyebrow">BROWSE</div>
+    <div class="sec-title">Active Challenges</div>
+    <p class="sec-sub">Complete challenges to earn passport stamps and unlock rewards at partner venues around the city.</p>
+
+    <div class="filter-row">
+      <button class="chip on">All</button>
+      <button class="chip">Culture</button>
+      <button class="chip">Food &amp; Drink</button>
+      <button class="chip">Social</button>
+      <button class="chip">Nightlife</button>
+      <button class="chip">Landmarks</button>
+    </div>
+
+    <div class="quest-grid">
+
+      <div class="qcard featured">
+        <div class="qcard-top">
+          <div class="qcard-icon icon-magenta">🗣</div>
+          <div class="qcard-badges"><span class="qbadge badge-new">ACTIVE</span><span class="qbadge badge-social">Social</span></div>
+        </div>
+        <div class="qcard-body">
+          <div class="qcard-title">Speak in Another Language</div>
+          <div class="qcard-desc">Approach someone and say anything in a foreign language. Record it as proof — any language counts.</div>
+          <div class="qcard-meta">
+            <span class="qcard-reward">🍺 Free shot</span>
+            <span class="qcard-xp">+100 XP</span>
+          </div>
+        </div>
+        <div class="qcard-footer">
+          <span class="qcard-loc">📍 Any venue</span>
+          <a href="passport.html" class="qcard-cta">Play now →</a>
+        </div>
+      </div>
+
+      <div class="qcard">
+        <div class="qcard-top">
+          <div class="qcard-icon icon-cyan">📸</div>
+          <div class="qcard-badges"><span class="qbadge badge-new">ACTIVE</span><span class="qbadge badge-social">Social</span></div>
+        </div>
+        <div class="qcard-body">
+          <div class="qcard-title">Selfie with a Classmate</div>
+          <div class="qcard-desc">Find someone you barely know and take a selfie together. Two people minimum — new friendships welcome.</div>
+          <div class="qcard-meta">
+            <span class="qcard-reward">🥤 Free soft drink</span>
+            <span class="qcard-xp">+100 XP</span>
+          </div>
+        </div>
+        <div class="qcard-footer">
+          <span class="qcard-loc">📍 Any location</span>
+          <a href="passport.html" class="qcard-cta">Play now →</a>
+        </div>
+      </div>
+
+      <div class="qcard">
+        <div class="qcard-top">
+          <div class="qcard-icon icon-yellow">🍻</div>
+          <div class="qcard-badges"><span class="qbadge badge-new">ACTIVE</span><span class="qbadge badge-food">Food &amp; Drink</span></div>
+        </div>
+        <div class="qcard-body">
+          <div class="qcard-title">Best Bar in Segovia?</div>
+          <div class="qcard-desc">What's your top pick? Share the name of your favourite bar and help the community discover hidden gems.</div>
+          <div class="qcard-meta">
+            <span class="qcard-reward">🎟 10% off next round</span>
+            <span class="qcard-xp">+100 XP</span>
+          </div>
+        </div>
+        <div class="qcard-footer">
+          <span class="qcard-loc">📍 City-wide</span>
+          <a href="passport.html" class="qcard-cta">Play now →</a>
+        </div>
+      </div>
+
+      <div class="qcard">
+        <div class="qcard-top">
+          <div class="qcard-icon icon-cyan">🏰</div>
+          <div class="qcard-badges"><span class="qbadge badge-popular">Popular</span><span class="qbadge badge-culture">Culture</span></div>
+        </div>
+        <div class="qcard-body">
+          <div class="qcard-title">Spot the Aqueduct</div>
+          <div class="qcard-desc">Take a photo in front of the Roman Aqueduct and submit it. Bonus XP if you can name the year it was built.</div>
+          <div class="qcard-meta">
+            <span class="qcard-reward">🎁 Surprise reward</span>
+            <span class="qcard-xp">+150 XP</span>
+          </div>
+        </div>
+        <div class="qcard-footer">
+          <span class="qcard-loc">📍 Plaza del Azoguejo</span>
+          <a href="#" class="qcard-cta">Coming soon</a>
+        </div>
+      </div>
+
+      <div class="qcard">
+        <div class="qcard-top">
+          <div class="qcard-icon icon-magenta">🍖</div>
+          <div class="qcard-badges"><span class="qbadge badge-food">Food &amp; Drink</span></div>
+        </div>
+        <div class="qcard-body">
+          <div class="qcard-title">Order Cochinillo</div>
+          <div class="qcard-desc">Segovia's signature dish. Order it at a partner restaurant and share your verdict — worth it or overrated?</div>
+          <div class="qcard-meta">
+            <span class="qcard-reward">🥩 Free tapa</span>
+            <span class="qcard-xp">+120 XP</span>
+          </div>
+        </div>
+        <div class="qcard-footer">
+          <span class="qcard-loc">📍 Old Town restaurants</span>
+          <a href="#" class="qcard-cta">Coming soon</a>
+        </div>
+      </div>
+
+      <div class="qcard">
+        <div class="qcard-top">
+          <div class="qcard-icon icon-green">🗺</div>
+          <div class="qcard-badges"><span class="qbadge badge-culture">Culture</span></div>
+        </div>
+        <div class="qcard-body">
+          <div class="qcard-title">Find the Alcázar</div>
+          <div class="qcard-desc">Navigate to the Alcázar of Segovia on foot — no GPS. Describe your route and what you discovered on the way.</div>
+          <div class="qcard-meta">
+            <span class="qcard-reward">🏰 Collector stamp</span>
+            <span class="qcard-xp">+200 XP</span>
+          </div>
+        </div>
+        <div class="qcard-footer">
+          <span class="qcard-loc">📍 Alcázar de Segovia</span>
+          <a href="#" class="qcard-cta">Coming soon</a>
+        </div>
+      </div>
+
+      <div class="qcard">
+        <div class="qcard-top">
+          <div class="qcard-icon icon-magenta">🎶</div>
+          <div class="qcard-badges"><span class="qbadge badge-night">Nightlife</span></div>
+        </div>
+        <div class="qcard-body">
+          <div class="qcard-title">Dance for 60 Seconds</div>
+          <div class="qcard-desc">Hit the dancefloor at a partner bar and get someone to record you dancing for at least 60 seconds. No excuses.</div>
+          <div class="qcard-meta">
+            <span class="qcard-reward">🍸 Free cocktail</span>
+            <span class="qcard-xp">+180 XP</span>
+          </div>
+        </div>
+        <div class="qcard-footer">
+          <span class="qcard-loc">📍 Partner bars</span>
+          <a href="#" class="qcard-cta">Coming soon</a>
+        </div>
+      </div>
+
+      <div class="qcard">
+        <div class="qcard-top">
+          <div class="qcard-icon icon-yellow">☀️</div>
+          <div class="qcard-badges"><span class="qbadge badge-culture">Culture</span></div>
+        </div>
+        <div class="qcard-body">
+          <div class="qcard-title">Sunrise at the Wall</div>
+          <div class="qcard-desc">Catch the sunrise from the medieval city walls and post a photo. Early birds get bonus XP and a free coffee.</div>
+          <div class="qcard-meta">
+            <span class="qcard-reward">☕ Free coffee</span>
+            <span class="qcard-xp">+250 XP</span>
+          </div>
+        </div>
+        <div class="qcard-footer">
+          <span class="qcard-loc">📍 Muralla de Segovia</span>
+          <a href="#" class="qcard-cta">Coming soon</a>
+        </div>
+      </div>
+
+      <div class="qcard">
+        <div class="qcard-top">
+          <div class="qcard-icon icon-cyan">🤝</div>
+          <div class="qcard-badges"><span class="qbadge badge-social">Social</span></div>
+        </div>
+        <div class="qcard-body">
+          <div class="qcard-title">Make a Local Friend</div>
+          <div class="qcard-desc">Chat with a Segovian (not a student) for at least 5 minutes. Ask them for their favourite hidden spot in the city.</div>
+          <div class="qcard-meta">
+            <span class="qcard-reward">🎖 Special badge</span>
+            <span class="qcard-xp">+300 XP</span>
+          </div>
+        </div>
+        <div class="qcard-footer">
+          <span class="qcard-loc">📍 Anywhere in the city</span>
+          <a href="#" class="qcard-cta">Coming soon</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- LEADERBOARD -->
+  <div id="leaderboard" style="scroll-margin-top:80px;">
+    <div class="sec-eyebrow">RANKINGS</div>
+    <div class="sec-title">Leaderboard</div>
+    <p class="sec-sub">Updated in real time. Complete more challenges to climb the ranks and unlock exclusive tier rewards.</p>
+
+    <div class="lb-layout">
+      <div class="lb-main">
+        <!-- Podium -->
+        <div class="lb-podium">
+          <div class="podium-col pod-2">
+            <div class="podium-avatar">S</div>
+            <div class="podium-name">Sofia J.</div>
+            <div class="podium-pts">980</div>
+            <div class="podium-bar"></div>
+          </div>
+          <div class="podium-col pod-1">
+            <div class="podium-avatar">M</div>
+            <div class="podium-name">Marco R.</div>
+            <div class="podium-pts">1240</div>
+            <div class="podium-bar"></div>
+          </div>
+          <div class="podium-col pod-3">
+            <div class="podium-avatar">P</div>
+            <div class="podium-name">Pedro K.</div>
+            <div class="podium-pts">870</div>
+            <div class="podium-bar"></div>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="lb-table">
+          <div class="lb-thead">
+            <div class="lb-th">#</div>
+            <div class="lb-th">Player</div>
+            <div class="lb-th">Quests</div>
+            <div class="lb-th">XP</div>
+          </div>
+          <div class="lb-trow">
+            <div class="lb-rank gold">1</div>
+            <div class="lb-player"><div class="lb-av lb-av-default">M</div><span class="lb-pname">Marco R.</span></div>
+            <div class="lb-challenges">12</div>
+            <div class="lb-score">1240</div>
+          </div>
+          <div class="lb-trow">
+            <div class="lb-rank silver">2</div>
+            <div class="lb-player"><div class="lb-av lb-av-default">S</div><span class="lb-pname">Sofia J.</span></div>
+            <div class="lb-challenges">9</div>
+            <div class="lb-score">980</div>
+          </div>
+          <div class="lb-trow">
+            <div class="lb-rank bronze">3</div>
+            <div class="lb-player"><div class="lb-av lb-av-default">P</div><span class="lb-pname">Pedro K.</span></div>
+            <div class="lb-challenges">8</div>
+            <div class="lb-score">870</div>
+          </div>
+          <div class="lb-trow">
+            <div class="lb-rank">4</div>
+            <div class="lb-player"><div class="lb-av lb-av-default">A</div><span class="lb-pname">Ana V.</span></div>
+            <div class="lb-challenges">7</div>
+            <div class="lb-score">740</div>
+          </div>
+          <div class="lb-trow">
+            <div class="lb-rank">5</div>
+            <div class="lb-player"><div class="lb-av lb-av-default">L</div><span class="lb-pname">Luca B.</span></div>
+            <div class="lb-challenges">6</div>
+            <div class="lb-score">640</div>
+          </div>
+          <div class="lb-trow">
+            <div class="lb-rank">6</div>
+            <div class="lb-player"><div class="lb-av lb-av-default">C</div><span class="lb-pname">Clara M.</span></div>
+            <div class="lb-challenges">5</div>
+            <div class="lb-score">510</div>
+          </div>
+          <div class="lb-trow">
+            <div class="lb-rank">7</div>
+            <div class="lb-player"><div class="lb-av lb-av-default">T</div><span class="lb-pname">Tom H.</span></div>
+            <div class="lb-challenges">4</div>
+            <div class="lb-score">430</div>
+          </div>
+          <div class="lb-trow me">
+            <div class="lb-rank mine">8</div>
+            <div class="lb-player"><div class="lb-av lb-av-me">E</div><span class="lb-pname mine">Emilio (you)</span></div>
+            <div class="lb-challenges">3</div>
+            <div class="lb-score mine">300</div>
+          </div>
+          <div class="lb-trow">
+            <div class="lb-rank">9</div>
+            <div class="lb-player"><div class="lb-av lb-av-default">R</div><span class="lb-pname">Rosa N.</span></div>
+            <div class="lb-challenges">2</div>
+            <div class="lb-score">210</div>
+          </div>
+          <div class="lb-trow">
+            <div class="lb-rank">10</div>
+            <div class="lb-player"><div class="lb-av lb-av-default">J</div><span class="lb-pname">Jorge P.</span></div>
+            <div class="lb-challenges">1</div>
+            <div class="lb-score">100</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lb-side">
+        <div class="lb-side-card">
+          <div class="lb-side-title">YOUR STATS</div>
+          <div class="my-stat-row">
+            <div class="my-stat">
+              <div class="my-stat-val">#8</div>
+              <div class="my-stat-lbl">Rank</div>
+            </div>
+            <div class="my-stat">
+              <div class="my-stat-val">300</div>
+              <div class="my-stat-lbl">Total XP</div>
+            </div>
+            <div class="my-stat">
+              <div class="my-stat-val">3</div>
+              <div class="my-stat-lbl">Quests done</div>
+            </div>
+            <div class="my-stat">
+              <div class="my-stat-val">3</div>
+              <div class="my-stat-lbl">Stamps</div>
+            </div>
+          </div>
+          <div class="streak-box">
+            <div class="streak-emoji">🔥</div>
+            <div class="streak-text">You're on a <strong>5-day streak!</strong> Keep going to earn bonus XP.</div>
+          </div>
+        </div>
+        <div class="lb-side-card">
+          <div class="lb-side-title">NEXT TIER REWARD</div>
+          <div style="text-align:center;padding:1rem 0;">
+            <div style="font-size:2rem;margin-bottom:0.5rem;">🥈</div>
+            <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:900;color:var(--yellow);margin-bottom:0.3rem;">SILVER EXPLORER</div>
+            <div style="font-size:0.78rem;color:rgba(255,255,255,0.3);line-height:1.5;">Reach <strong style="color:var(--white);">500 XP</strong> to unlock Silver tier and earn a free round at any partner bar.</div>
+            <div style="margin-top:1rem;height:5px;background:rgba(255,255,255,0.07);">
+              <div style="height:100%;width:60%;background:var(--yellow);"></div>
+            </div>
+            <div style="font-size:0.68rem;color:rgba(255,255,255,0.2);margin-top:0.4rem;">300 / 500 XP</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- FAQ -->
+  <div id="faq" style="scroll-margin-top:80px;">
+    <div class="faq-wrap">
+      <div class="faq-left-title">Got<br>Questions?<br><span>We Do Too.</span></div>
+      <div class="faq-list">
+
+        <div class="faq-item open">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            Is Segovia Passport only for nightlife?
+            <span class="faq-toggle">+</span>
+          </div>
+          <div class="faq-a">Not at all. While some challenges happen at bars and clubs, many quests are about culture, food, landmarks, language, and social connection. You can explore the Roman Aqueduct, taste cochinillo, chat with locals, and much more — all while earning XP and rewards.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            How do I earn rewards?
+            <span class="faq-toggle">+</span>
+          </div>
+          <div class="faq-a">Complete challenges and submit your proof (photo, voice memo, or text). Once an admin approves your submission, you earn XP, unlock a passport stamp, and receive your reward code to redeem at partner venues.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            Is the app completely free?
+            <span class="faq-toggle">+</span>
+          </div>
+          <div class="faq-a">Yes — joining and playing is 100% free. Some challenges require a purchase at a partner venue (like ordering a drink) to unlock the associated reward, but you'll never pay us a cent.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            How does the leaderboard work?
+            <span class="faq-toggle">+</span>
+          </div>
+          <div class="faq-a">Every approved challenge submission earns you XP. The more XP you collect, the higher you climb. Rankings reset weekly, giving everyone a fresh shot at the top spot each week.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            Can I do challenges solo or only in groups?
+            <span class="faq-toggle">+</span>
+          </div>
+          <div class="faq-a">Most challenges can be done solo, though some are more fun with others. Group challenges are coming soon — where a squad can tackle a mission together and share the reward.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            When are new quests added?
+            <span class="faq-toggle">+</span>
+          </div>
+          <div class="faq-a">New quests are added weekly, with special event quests on weekends and holidays. Follow us to get notified when fresh challenges drop — early completions sometimes earn bonus XP.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFaq(this)">
+            What if my submission gets rejected?
+            <span class="faq-toggle">+</span>
+          </div>
+          <div class="faq-a">No worries — you can re-submit. Rejections usually happen if the proof doesn't clearly match the challenge. Just try again with clearer evidence and it'll be approved.</div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- CTA BANNER -->
+<div class="cta-banner">
+  <div>
+    <div class="cta-title">Ready to explore<br>Segovia?</div>
+    <div class="cta-sub">Jump into your passport and start earning rewards tonight.</div>
+  </div>
+  <a href="passport.html" class="btn-white">Open my passport →</a>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-logo">🏰 SEGOVIA PASSPORT</div>
+  <div class="footer-links">
+    <a href="index.html" class="footer-link">Home</a>
+    <a href="explore.html" class="footer-link">Explore</a>
+    <a href="passport.html" class="footer-link">My Passport</a>
+  </div>
+  <div class="footer-copy">© 2025 Segovia Passport</div>
+</footer>
+
+<script>
+function toggleFaq(el) {
+  var item = el.parentElement;
+  item.classList.toggle('open');
+}
+
+document.querySelectorAll('.tab').forEach(function(tab) {
+  tab.addEventListener('click', function(e) {
+    document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+    tab.classList.add('active');
+  });
+});
+
+document.querySelectorAll('.chip').forEach(function(chip) {
+  chip.addEventListener('click', function() {
+    document.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('on'); });
+    chip.classList.add('on');
+  });
+});
+</script>
+</body>
+</html>

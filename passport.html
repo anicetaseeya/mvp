@@ -20,6 +20,9 @@ body { font-family: var(--font-body); background: var(--black); color: var(--whi
 .nav-logo { display:flex; align-items:center; gap:0.6rem; text-decoration:none; }
 .nav-logo-icon { font-size:1.3rem; }
 .nav-logo-text { font-family:var(--font-display); font-size:1.1rem; font-weight:900; letter-spacing:0.05em; color:var(--cyan); }
+.nav-right { display:flex; align-items:center; gap:1.5rem; }
+.nav-explore { font-family:var(--font-display); font-size:0.88rem; font-weight:700; color:var(--cyan); text-decoration:none; letter-spacing:0.05em; text-transform:uppercase; border:1px solid rgba(0,229,255,0.3); padding:6px 16px; transition:all 0.15s; }
+.nav-explore:hover { background:rgba(0,229,255,0.1); }
 .nav-back { font-family:var(--font-display); font-size:0.88rem; font-weight:700; color:rgba(255,255,255,0.4); text-decoration:none; letter-spacing:0.05em; text-transform:uppercase; transition:color 0.15s; }
 .nav-back:hover { color:var(--cyan); }
 
@@ -156,6 +159,27 @@ body { font-family: var(--font-body); background: var(--black); color: var(--whi
 .toast { position:fixed; bottom:2rem; right:2rem; background:var(--black); color:var(--white); border:1px solid rgba(0,229,255,0.25); border-left:3px solid var(--cyan); padding:0.85rem 1.25rem; font-size:0.82rem; line-height:1.5; max-width:300px; z-index:9999; transform:translateY(80px); opacity:0; transition:all 0.3s cubic-bezier(0.34,1.3,0.64,1); pointer-events:none; }
 .toast.show { transform:translateY(0); opacity:1; }
 .toast strong { color:var(--cyan); font-weight:700; }
+
+/* WIN MODAL */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:1000; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.4s ease; }
+.modal-overlay.show { opacity:1; pointer-events:all; }
+.modal-box { background:#111; border:2px solid var(--yellow); max-width:520px; width:90%; padding:3rem 2.5rem; text-align:center; position:relative; animation:modalPop 0.5s cubic-bezier(0.34,1.3,0.64,1) both; }
+@keyframes modalPop { from{transform:scale(0.7) translateY(30px);opacity:0} to{transform:scale(1) translateY(0);opacity:1} }
+.modal-confetti { font-size:2.8rem; margin-bottom:1rem; display:block; animation:spin 1s ease both; }
+@keyframes spin { from{transform:rotate(-20deg) scale(0.5)} to{transform:rotate(0deg) scale(1)} }
+.modal-title { font-family:var(--font-display); font-size:clamp(2.5rem,5vw,3.8rem); font-weight:900; color:var(--yellow); line-height:1; letter-spacing:-0.01em; margin-bottom:0.5rem; }
+.modal-sub { font-family:var(--font-display); font-size:1.3rem; font-weight:700; color:rgba(255,255,255,0.55); letter-spacing:0.05em; margin-bottom:1.8rem; }
+.modal-prize-box { background:rgba(255,230,0,0.06); border:1px solid rgba(255,230,0,0.2); padding:1.5rem; margin-bottom:2rem; }
+.modal-prize-label { font-family:var(--font-display); font-size:0.65rem; font-weight:700; letter-spacing:0.25em; color:rgba(255,230,0,0.4); margin-bottom:0.5rem; }
+.modal-prize-value { font-family:var(--font-display); font-size:2rem; font-weight:900; color:var(--yellow); letter-spacing:0.08em; }
+.modal-prize-note { font-size:0.78rem; color:rgba(255,255,255,0.3); margin-top:0.5rem; line-height:1.5; }
+.modal-actions { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; }
+.modal-btn-primary { font-family:var(--font-display); font-size:1rem; font-weight:700; letter-spacing:0.06em; text-decoration:none; background:var(--yellow); color:var(--black); padding:12px 28px; border:none; cursor:pointer; text-transform:uppercase; transition:all 0.15s; }
+.modal-btn-primary:hover { background:#fff176; }
+.modal-btn-ghost { font-family:var(--font-display); font-size:0.9rem; font-weight:700; letter-spacing:0.05em; background:transparent; color:rgba(255,255,255,0.35); border:1px solid rgba(255,255,255,0.1); padding:12px 24px; cursor:pointer; text-transform:uppercase; transition:all 0.15s; }
+.modal-btn-ghost:hover { color:var(--white); border-color:rgba(255,255,255,0.3); }
+.modal-close { position:absolute; top:1rem; right:1.2rem; background:none; border:none; color:rgba(255,255,255,0.2); font-size:1.4rem; cursor:pointer; line-height:1; transition:color 0.15s; }
+.modal-close:hover { color:var(--white); }
 </style>
 </head>
 <body>
@@ -165,7 +189,10 @@ body { font-family: var(--font-body); background: var(--black); color: var(--whi
     <span class="nav-logo-icon">🏰</span>
     <span class="nav-logo-text">SEGOVIA PASSPORT</span>
   </a>
-  <a href="index.html" class="nav-back">← Back</a>
+  <div class="nav-right">
+    <a href="explore.html" class="nav-explore">Explore quests →</a>
+    <a href="index.html" class="nav-back">← Back</a>
+  </div>
 </nav>
 
 <div class="layout">
@@ -229,7 +256,7 @@ body { font-family: var(--font-body); background: var(--black); color: var(--whi
     </div>
 
     <!-- Header -->
-    <div class="ch-eyebrow">TONIGHT'S CHALLENGES</div>
+    <div class="ch-eyebrow">TODAY'S CHALLENGES</div>
     <h1 class="ch-title">Prove yourself,<br><span class="ch-accent">Emilio.</span></h1>
 
     <!-- CHALLENGE 1: VOICE -->
@@ -239,7 +266,7 @@ body { font-family: var(--font-body); background: var(--black); color: var(--whi
         <div class="cc-toprow">
           <div>
             <div class="cc-title">Speak in another language</div>
-            <div class="cc-sub">Walk up to someone in the room and say anything in a foreign language — record it as proof</div>
+            <div class="cc-sub">Walk up to someone nearby and say anything in a foreign language — record it as proof</div>
           </div>
           <div class="cc-pill pill-active" id="ccp-0">ACTIVE</div>
         </div>
@@ -282,8 +309,8 @@ body { font-family: var(--font-body); background: var(--black); color: var(--whi
       <div class="cc-right">
         <div class="cc-toprow">
           <div>
-            <div class="cc-title">Name a bar in Segovia</div>
-            <div class="cc-sub">Type the name of any bar or nightspot in the city</div>
+            <div class="cc-title">What's the best bar in Segovia?</div>
+            <div class="cc-sub">Share your top pick — help the community discover the city's hidden gems</div>
           </div>
           <div class="cc-pill pill-locked" id="ccp-2">LOCKED</div>
         </div>
@@ -295,6 +322,25 @@ body { font-family: var(--font-body); background: var(--black); color: var(--whi
     </div>
 
   </main>
+</div>
+
+<!-- WIN MODAL -->
+<div class="modal-overlay" id="win-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <span class="modal-confetti">🎉</span>
+    <div class="modal-title">YOU WON<br>A PRIZE!</div>
+    <div class="modal-sub">Emilio is officially a Segovian.</div>
+    <div class="modal-prize-box">
+      <div class="modal-prize-label">YOUR REWARD CODE</div>
+      <div class="modal-prize-value">SP-EMILIO-300</div>
+      <div class="modal-prize-note">Show this code to any partner venue to claim your free drink. Valid tonight only.</div>
+    </div>
+    <div class="modal-actions">
+      <a href="explore.html" class="modal-btn-primary">Browse more quests →</a>
+      <button class="modal-btn-ghost" onclick="closeModal()">Close</button>
+    </div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -339,7 +385,8 @@ function checkBar() {
 
 function submit(idx) {
   var icons = ['🗣','📸','🍻'];
-  var labels = ['Voice memo — language challenge','Selfie with a classmate','Bar name: "'+esc(document.getElementById('bar-inp')?document.getElementById('bar-inp').value.trim():'')+'"'];
+  var barVal = document.getElementById('bar-inp') ? document.getElementById('bar-inp').value.trim() : '';
+  var labels = ['Voice memo — language challenge','Selfie with a classmate','Best bar pick: "'+esc(barVal)+'"'];
   S.queue.push({idx:idx, label:labels[idx], icon:icons[idx]});
   document.getElementById('sub-'+idx).disabled = true;
   document.getElementById('sub-'+idx).textContent = 'Submitted — pending approval';
@@ -368,12 +415,22 @@ function approve(qi) {
   if (done === 3) {
     document.getElementById('prize-teaser').style.display='none';
     document.getElementById('win-card').className='win-card show';
-    toast('🏆 All challenges complete! Time for the prize!');
+    setTimeout(showPrizeModal, 600);
   } else {
     unlockNext(idx+1);
     toast('🎉 Challenge '+(idx+1)+' approved! <strong>+100 XP</strong>');
   }
   renderQ();
+}
+
+function showPrizeModal() {
+  document.getElementById('win-modal').className = 'modal-overlay show';
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('win-modal').className = 'modal-overlay';
+  document.body.style.overflow = '';
 }
 
 function reject(qi) {
@@ -426,6 +483,10 @@ function toast(msg) {
 function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+
+document.getElementById('win-modal').addEventListener('click', function(e){
+  if (e.target === this) closeModal();
+});
 </script>
 </body>
 </html>
