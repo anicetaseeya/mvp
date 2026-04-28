@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emilio's Passport — Segovia Passport</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --cyan: #00E5FF; --magenta: #FF00CC; --yellow: #FFE600;
+  --black: #0a0a0a; --white: #ffffff;
+  --font-display: 'Barlow Condensed', sans-serif;
+  --font-body: 'Barlow', sans-serif;
+}
+body { font-family: var(--font-body); background: var(--black); color: var(--white); overflow-x: hidden; min-height: 100vh; }
+
+/* NAV */
+.nav { position: fixed; top:0; left:0; right:0; z-index:200; display:flex; align-items:center; justify-content:space-between; padding:0 2.5rem; height:64px; background:var(--black); border-bottom:1px solid rgba(0,229,255,0.15); }
+.nav-logo { display:flex; align-items:center; gap:0.6rem; text-decoration:none; }
+.nav-logo-icon { font-size:1.3rem; }
+.nav-logo-text { font-family:var(--font-display); font-size:1.1rem; font-weight:900; letter-spacing:0.05em; color:var(--cyan); }
+.nav-back { font-family:var(--font-display); font-size:0.88rem; font-weight:700; color:rgba(255,255,255,0.4); text-decoration:none; letter-spacing:0.05em; text-transform:uppercase; transition:color 0.15s; }
+.nav-back:hover { color:var(--cyan); }
+
+/* LAYOUT */
+.layout { display:grid; grid-template-columns:300px 1fr; min-height:calc(100vh - 64px); margin-top:64px; }
+
+/* SIDEBAR */
+.sidebar { background:#0d0d0d; border-right:1px solid rgba(0,229,255,0.08); padding:1.75rem 1.4rem; display:flex; flex-direction:column; gap:1.4rem; overflow-y:auto; position:sticky; top:64px; height:calc(100vh - 64px); }
+
+.player-card { background:#181818; border:1px solid rgba(0,229,255,0.1); border-radius:10px; padding:1.5rem; text-align:center; }
+.avatar { width:70px; height:70px; border-radius:50%; background:var(--cyan); color:var(--black); font-family:var(--font-display); font-size:1.9rem; font-weight:900; display:flex; align-items:center; justify-content:center; margin:0 auto 1rem; border:3px solid rgba(0,229,255,0.25); }
+.player-name { font-family:var(--font-display); font-size:1.8rem; font-weight:900; color:var(--white); letter-spacing:0.06em; margin-bottom:3px; }
+.player-level { font-family:var(--font-display); font-size:0.65rem; font-weight:700; letter-spacing:0.2em; color:var(--cyan); opacity:0.55; margin-bottom:1.2rem; }
+
+.xp-row { display:flex; justify-content:space-between; font-size:0.63rem; color:rgba(0,229,255,0.4); font-weight:600; letter-spacing:0.04em; margin-bottom:5px; }
+.xp-track { height:5px; background:rgba(255,255,255,0.07); overflow:hidden; }
+.xp-bar { height:100%; background:var(--cyan); transition:width 0.8s cubic-bezier(0.4,0,0.2,1); }
+
+.stamps-section { margin-top:1.2rem; }
+.stamps-heading { font-family:var(--font-display); font-size:0.6rem; font-weight:700; letter-spacing:0.22em; color:rgba(255,255,255,0.2); margin-bottom:0.7rem; }
+.stamps-row { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; }
+.stamp { aspect-ratio:1; border-radius:7px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; font-size:1.35rem; transition:all 0.3s; }
+.stamp-locked { background:rgba(255,255,255,0.03); border:1px dashed rgba(255,255,255,0.1); opacity:0.2; }
+.stamp-unlocked { background:rgba(0,229,255,0.1); border:1px solid rgba(0,229,255,0.35); opacity:1; }
+.stamp-unlocking { animation:stampPop 0.65s cubic-bezier(0.34,1.56,0.64,1); }
+@keyframes stampPop { 0%{transform:scale(0.3) rotate(-20deg);opacity:0} 65%{transform:scale(1.2) rotate(3deg)} 100%{transform:scale(1) rotate(0);opacity:1} }
+.stamp-lbl { font-size:8px; font-weight:700; letter-spacing:0.05em; color:rgba(0,229,255,0.45); text-align:center; text-transform:uppercase; }
+
+.prize-teaser { background:rgba(255,0,204,0.07); border:1px solid rgba(255,0,204,0.18); border-radius:8px; padding:0.85rem; display:flex; align-items:center; gap:0.7rem; }
+.pt-emoji { font-size:1.3rem; flex-shrink:0; }
+.pt-text { font-size:0.76rem; line-height:1.5; color:rgba(255,255,255,0.45); }
+.pt-text strong { color:var(--magenta); font-weight:700; }
+
+.win-card { display:none; background:rgba(255,230,0,0.07); border:2px solid var(--yellow); border-radius:8px; padding:1.25rem; text-align:center; animation:fadeUp 0.5s ease; }
+.win-card.show { display:block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+.wc-emoji { font-size:2.2rem; margin-bottom:0.5rem; }
+.wc-title { font-family:var(--font-display); font-size:1.1rem; font-weight:900; color:var(--yellow); letter-spacing:0.05em; margin-bottom:0.4rem; }
+.wc-sub { font-size:0.77rem; color:rgba(255,255,255,0.4); line-height:1.5; }
+
+/* LEADERBOARD */
+.lb-card { background:#181818; border:1px solid rgba(255,255,255,0.05); border-radius:10px; overflow:hidden; }
+.lb-heading { font-family:var(--font-display); font-size:0.62rem; font-weight:700; letter-spacing:0.22em; color:rgba(255,255,255,0.2); padding:0.85rem 1rem 0.6rem; border-bottom:1px solid rgba(255,255,255,0.05); }
+.lb-list { padding:0.4rem 0; }
+.lb-row { display:flex; align-items:center; gap:0.7rem; padding:0.5rem 1rem; transition:background 0.12s; }
+.lb-row:hover { background:rgba(255,255,255,0.025); }
+.lb-row.lb-me { background:rgba(0,229,255,0.04); }
+.lb-pos { font-family:var(--font-display); font-size:1rem; font-weight:900; color:rgba(255,255,255,0.18); width:18px; text-align:center; flex-shrink:0; }
+.lb-top { color:var(--yellow) !important; }
+.lb-me-pos { color:var(--cyan) !important; }
+.lb-name { flex:1; font-size:0.8rem; color:rgba(255,255,255,0.45); }
+.lb-me-name { color:var(--cyan) !important; font-weight:700; }
+.lb-pts { font-family:var(--font-display); font-size:0.82rem; font-weight:700; color:rgba(255,255,255,0.22); }
+
+/* MAIN */
+.main { padding:2rem 2.5rem; overflow-y:auto; }
+
+/* ADMIN PANEL */
+.admin-panel { background:#111; border-left:3px solid var(--cyan); border-top:1px solid rgba(0,229,255,0.12); border-right:1px solid rgba(0,229,255,0.12); border-bottom:1px solid rgba(0,229,255,0.12); margin-bottom:2.5rem; }
+.admin-header { display:flex; align-items:center; justify-content:space-between; padding:0.8rem 1.2rem; border-bottom:1px solid rgba(255,255,255,0.05); }
+.admin-title { font-family:var(--font-display); font-size:0.68rem; font-weight:700; letter-spacing:0.2em; color:var(--cyan); opacity:0.65; }
+.admin-badge { background:var(--magenta); color:var(--white); font-family:var(--font-display); font-size:0.65rem; font-weight:700; padding:2px 9px; min-width:22px; text-align:center; }
+.admin-badge.zero { background:rgba(255,255,255,0.07); color:rgba(255,255,255,0.25); }
+.admin-body { padding:0.7rem 1.2rem; min-height:48px; }
+.q-empty { font-size:0.78rem; color:rgba(255,255,255,0.18); padding:0.3rem 0; }
+.q-item { display:flex; align-items:center; gap:0.8rem; padding:0.55rem 0; border-bottom:1px solid rgba(255,255,255,0.04); }
+.q-item:last-child { border-bottom:none; }
+.q-icon { width:32px; height:32px; background:rgba(255,255,255,0.05); border-radius:5px; display:flex; align-items:center; justify-content:center; font-size:15px; flex-shrink:0; }
+.q-label { flex:1; font-size:0.8rem; color:rgba(255,255,255,0.65); font-weight:500; }
+.q-sub { font-size:0.68rem; color:rgba(255,255,255,0.2); margin-top:1px; }
+.q-actions { display:flex; gap:5px; flex-shrink:0; }
+.btn-approve, .btn-reject { padding:4px 13px; border:none; font-family:var(--font-display); font-size:0.7rem; font-weight:700; letter-spacing:0.05em; cursor:pointer; transition:all 0.15s; text-transform:uppercase; }
+.btn-approve { background:var(--cyan); color:var(--black); }
+.btn-approve:hover { background:#33eeff; }
+.btn-reject { background:rgba(255,80,80,0.1); color:#ff6b6b; border:1px solid rgba(255,80,80,0.2); }
+.btn-reject:hover { background:rgba(255,80,80,0.2); }
+
+/* CHALLENGES HEADER */
+.ch-eyebrow { font-family:var(--font-display); font-size:0.68rem; font-weight:700; letter-spacing:0.25em; color:var(--magenta); margin-bottom:0.4rem; }
+.ch-title { font-family:var(--font-display); font-size:clamp(2.2rem,4vw,3.2rem); font-weight:900; color:var(--white); line-height:1.0; margin-bottom:2rem; }
+.ch-accent { color:var(--cyan); }
+
+/* CHALLENGE CARDS */
+.cc { display:flex; gap:0; background:#111; border:1px solid rgba(255,255,255,0.06); overflow:hidden; margin-bottom:1rem; transition:border-color 0.2s; }
+.cc.active { border-color:rgba(0,229,255,0.3); box-shadow:0 0 24px rgba(0,229,255,0.04); }
+.cc.locked { opacity:0.4; }
+.cc.done { opacity:0.5; }
+
+.cc-left { width:76px; background:rgba(255,255,255,0.02); border-right:1px solid rgba(255,255,255,0.04); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.cc-num { font-family:var(--font-display); font-size:2.4rem; font-weight:900; color:var(--cyan); line-height:1; }
+.cc-num.dim { color:rgba(255,255,255,0.1); }
+.cc-num.tick { color:var(--cyan); }
+
+.cc-right { flex:1; padding:1.1rem 1.4rem; min-width:0; }
+.cc-toprow { display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; margin-bottom:0.85rem; }
+.cc-title { font-family:var(--font-display); font-size:1.15rem; font-weight:900; color:var(--white); margin-bottom:3px; }
+.cc-sub { font-size:0.78rem; color:rgba(255,255,255,0.32); line-height:1.5; max-width:52ch; }
+.cc-pill { font-family:var(--font-display); font-size:0.6rem; font-weight:700; letter-spacing:0.14em; padding:4px 10px; white-space:nowrap; flex-shrink:0; }
+.pill-active   { background:rgba(0,229,255,0.1);   color:var(--cyan);   border:1px solid rgba(0,229,255,0.28); }
+.pill-locked   { background:rgba(255,255,255,0.04); color:rgba(255,255,255,0.2); border:1px solid rgba(255,255,255,0.08); }
+.pill-pending  { background:rgba(255,230,0,0.1);   color:var(--yellow); border:1px solid rgba(255,230,0,0.25); }
+.pill-done     { background:rgba(0,255,120,0.08);  color:#00ff78;       border:1px solid rgba(0,255,120,0.2); }
+.pill-retry    { background:rgba(255,80,80,0.1);   color:#ff6b6b;       border:1px solid rgba(255,80,80,0.2); }
+
+.cc-body { display:flex; flex-direction:column; gap:0.55rem; }
+
+.rec-ind { display:none; align-items:center; gap:0.45rem; font-size:0.73rem; color:#ff6b6b; font-weight:500; }
+.rec-ind.show { display:flex; }
+.rec-dot { width:7px; height:7px; border-radius:50%; background:#ff4444; animation:blink 1s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+
+.photo-prev { display:none; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.07); padding:0.65rem 1rem; font-size:0.78rem; color:rgba(255,255,255,0.35); width:fit-content; }
+.photo-prev.show { display:flex; align-items:center; gap:0.5rem; }
+
+.cc-input { background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); padding:0.62rem 0.9rem; font-family:var(--font-body); font-size:0.88rem; color:var(--white); outline:none; width:100%; max-width:400px; transition:border-color 0.15s; }
+.cc-input:focus { border-color:var(--cyan); }
+.cc-input::placeholder { color:rgba(255,255,255,0.18); }
+
+/* BUTTONS */
+.cbtn { display:inline-flex; align-items:center; justify-content:center; gap:0.45rem; padding:0.6rem 1.1rem; border:none; font-family:var(--font-display); font-size:0.85rem; font-weight:700; letter-spacing:0.06em; cursor:pointer; transition:all 0.15s; text-transform:uppercase; width:fit-content; }
+.cbtn-voice { background:rgba(0,229,255,0.09); color:var(--cyan); border:1px solid rgba(0,229,255,0.22); }
+.cbtn-voice:hover:not(:disabled) { background:rgba(0,229,255,0.18); }
+.cbtn-voice.recording { background:rgba(255,80,80,0.1); color:#ff6b6b; border-color:rgba(255,80,80,0.3); animation:blink 1.1s infinite; }
+.cbtn-voice.recorded { background:rgba(0,255,120,0.08); color:#00ff78; border-color:rgba(0,255,120,0.2); }
+.cbtn-photo { background:rgba(255,0,204,0.09); color:var(--magenta); border:1px solid rgba(255,0,204,0.22); }
+.cbtn-photo:hover:not(:disabled) { background:rgba(255,0,204,0.18); }
+.cbtn-photo.captured { background:rgba(0,255,120,0.08); color:#00ff78; border-color:rgba(0,255,120,0.2); }
+.cbtn-submit { background:var(--magenta); color:var(--white); }
+.cbtn-submit:hover:not(:disabled) { background:#ff33dd; }
+.cbtn-submit:disabled { background:rgba(255,255,255,0.05); color:rgba(255,255,255,0.18); cursor:default; }
+.cbtn-done { background:rgba(0,255,120,0.08); color:#00ff78; border:1px solid rgba(0,255,120,0.2); cursor:default; }
+
+/* TOAST */
+.toast { position:fixed; bottom:2rem; right:2rem; background:var(--black); color:var(--white); border:1px solid rgba(0,229,255,0.25); border-left:3px solid var(--cyan); padding:0.85rem 1.25rem; font-size:0.82rem; line-height:1.5; max-width:300px; z-index:9999; transform:translateY(80px); opacity:0; transition:all 0.3s cubic-bezier(0.34,1.3,0.64,1); pointer-events:none; }
+.toast.show { transform:translateY(0); opacity:1; }
+.toast strong { color:var(--cyan); font-weight:700; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="nav-logo">
+    <span class="nav-logo-icon">🏰</span>
+    <span class="nav-logo-text">SEGOVIA PASSPORT</span>
+  </a>
+  <a href="index.html" class="nav-back">← Back</a>
+</nav>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="player-card">
+      <div class="avatar">E</div>
+      <div class="player-name">EMILIO</div>
+      <div class="player-level" id="player-level">LEVEL 1 — NEWCOMER</div>
+      <div class="xp-row">
+        <span id="xp-now">0 XP</span><span>300 XP</span>
+      </div>
+      <div class="xp-track">
+        <div class="xp-bar" id="xp-bar" style="width:0%"></div>
+      </div>
+      <div class="stamps-section">
+        <div class="stamps-heading">PASSPORT STAMPS</div>
+        <div class="stamps-row">
+          <div class="stamp stamp-locked" id="stamp-0"><span>🗣</span><div class="stamp-lbl">Polyglot</div></div>
+          <div class="stamp stamp-locked" id="stamp-1"><span>📸</span><div class="stamp-lbl">Connector</div></div>
+          <div class="stamp stamp-locked" id="stamp-2"><span>🍻</span><div class="stamp-lbl">Local</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="prize-teaser" id="prize-teaser">
+      <div class="pt-emoji">🎁</div>
+      <div class="pt-text">Complete all 3 challenges to unlock your <strong>surprise reward!</strong></div>
+    </div>
+
+    <div class="win-card" id="win-card">
+      <div class="wc-emoji">🏆</div>
+      <div class="wc-title">CHALLENGE COMPLETE!</div>
+      <div class="wc-sub">Emilio is a true Segovian. Time to claim that prize!</div>
+    </div>
+
+    <div class="lb-card">
+      <div class="lb-heading">LEADERBOARD</div>
+      <div class="lb-list">
+        <div class="lb-row"><span class="lb-pos lb-top">1</span><span class="lb-name">Marco R.</span><span class="lb-pts">1240</span></div>
+        <div class="lb-row"><span class="lb-pos">2</span><span class="lb-name">Sofia J.</span><span class="lb-pts">980</span></div>
+        <div class="lb-row"><span class="lb-pos">3</span><span class="lb-name">Pedro K.</span><span class="lb-pts">870</span></div>
+        <div class="lb-row lb-me"><span class="lb-pos lb-me-pos">8</span><span class="lb-name lb-me-name">Emilio (you)</span><span class="lb-pts" id="lb-pts">0</span></div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- Admin queue -->
+    <div class="admin-panel">
+      <div class="admin-header">
+        <span class="admin-title">SUBMISSIONS QUEUE</span>
+        <span class="admin-badge zero" id="q-badge">0</span>
+      </div>
+      <div class="admin-body" id="q-body">
+        <div class="q-empty">No submissions yet…</div>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <div class="ch-eyebrow">TONIGHT'S CHALLENGES</div>
+    <h1 class="ch-title">Prove yourself,<br><span class="ch-accent">Emilio.</span></h1>
+
+    <!-- CHALLENGE 1: VOICE -->
+    <div class="cc active" id="cc-0">
+      <div class="cc-left"><div class="cc-num" id="ccn-0">01</div></div>
+      <div class="cc-right">
+        <div class="cc-toprow">
+          <div>
+            <div class="cc-title">Speak in another language</div>
+            <div class="cc-sub">Walk up to someone in the room and say anything in a foreign language — record it as proof</div>
+          </div>
+          <div class="cc-pill pill-active" id="ccp-0">ACTIVE</div>
+        </div>
+        <div class="cc-body" id="ccb-0">
+          <div class="rec-ind" id="rec-ind">
+            <span class="rec-dot"></span> Recording…
+          </div>
+          <button class="cbtn cbtn-voice" id="mic-btn" onclick="toggleRec()">
+            🎤 &nbsp;Hold to record voice
+          </button>
+          <button class="cbtn cbtn-submit" id="sub-0" onclick="submit(0)" disabled>
+            Submit voice memo
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHALLENGE 2: PHOTO -->
+    <div class="cc locked" id="cc-1">
+      <div class="cc-left"><div class="cc-num dim" id="ccn-1">02</div></div>
+      <div class="cc-right">
+        <div class="cc-toprow">
+          <div>
+            <div class="cc-title">Selfie with a classmate</div>
+            <div class="cc-sub">Find someone nearby and take a selfie together — two people minimum</div>
+          </div>
+          <div class="cc-pill pill-locked" id="ccp-1">LOCKED</div>
+        </div>
+        <div class="cc-body" id="ccb-1" style="display:none">
+          <div class="photo-prev" id="photo-prev">📷 &nbsp;Photo captured!</div>
+          <button class="cbtn cbtn-photo" id="cam-btn" onclick="takePhoto()">📷 &nbsp;Take selfie</button>
+          <button class="cbtn cbtn-submit" id="sub-1" onclick="submit(1)" disabled>Submit photo</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHALLENGE 3: TEXT -->
+    <div class="cc locked" id="cc-2">
+      <div class="cc-left"><div class="cc-num dim" id="ccn-2">03</div></div>
+      <div class="cc-right">
+        <div class="cc-toprow">
+          <div>
+            <div class="cc-title">Name a bar in Segovia</div>
+            <div class="cc-sub">Type the name of any bar or nightspot in the city</div>
+          </div>
+          <div class="cc-pill pill-locked" id="ccp-2">LOCKED</div>
+        </div>
+        <div class="cc-body" id="ccb-2" style="display:none">
+          <input class="cc-input" id="bar-inp" type="text" placeholder="e.g. Bar El Abuelo, La Tasquina…" oninput="checkBar()">
+          <button class="cbtn cbtn-submit" id="sub-2" onclick="submit(2)" disabled>Submit answer</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var S = { recording:false, recTimer:null, xp:0, approved:[false,false,false], queue:[] };
+
+function toggleRec() {
+  var btn = document.getElementById('mic-btn');
+  var ind = document.getElementById('rec-ind');
+  if (!S.recording) {
+    S.recording = true;
+    btn.className = 'cbtn cbtn-voice recording';
+    btn.innerHTML = '🔴 &nbsp;Recording… click to stop';
+    ind.className = 'rec-ind show';
+    S.recTimer = setTimeout(stopRec, 10000);
+  } else { stopRec(); }
+}
+
+function stopRec() {
+  clearTimeout(S.recTimer); S.recording = false;
+  var btn = document.getElementById('mic-btn');
+  btn.className = 'cbtn cbtn-voice recorded';
+  btn.innerHTML = '✓ &nbsp;Voice memo saved';
+  btn.disabled = true;
+  document.getElementById('rec-ind').className = 'rec-ind';
+  document.getElementById('sub-0').disabled = false;
+}
+
+function takePhoto() {
+  var btn = document.getElementById('cam-btn');
+  btn.className = 'cbtn cbtn-photo captured';
+  btn.innerHTML = '✓ &nbsp;Selfie captured!';
+  btn.disabled = true;
+  document.getElementById('photo-prev').className = 'photo-prev show';
+  document.getElementById('sub-1').disabled = false;
+}
+
+function checkBar() {
+  document.getElementById('sub-2').disabled = document.getElementById('bar-inp').value.trim().length < 2;
+}
+
+function submit(idx) {
+  var icons = ['🗣','📸','🍻'];
+  var labels = ['Voice memo — language challenge','Selfie with a classmate','Bar name: "'+esc(document.getElementById('bar-inp')?document.getElementById('bar-inp').value.trim():'')+'"'];
+  S.queue.push({idx:idx, label:labels[idx], icon:icons[idx]});
+  document.getElementById('sub-'+idx).disabled = true;
+  document.getElementById('sub-'+idx).textContent = 'Submitted — pending approval';
+  setPill(idx,'pill-pending','PENDING');
+  renderQ();
+  toast('📨 Submitted! Waiting for approval.');
+}
+
+function approve(qi) {
+  var item = S.queue[qi]; var idx = item.idx;
+  S.queue.splice(qi,1); S.approved[idx] = true;
+  document.getElementById('cc-'+idx).className = 'cc done';
+  document.getElementById('ccb-'+idx).innerHTML = '<button class="cbtn cbtn-done">✓ &nbsp;Challenge complete!</button>';
+  var n = document.getElementById('ccn-'+idx); n.className='cc-num tick'; n.textContent='✓';
+  setPill(idx,'pill-done','DONE');
+  var s = document.getElementById('stamp-'+idx);
+  s.className='stamp stamp-unlocked stamp-unlocking';
+  setTimeout(function(){s.className='stamp stamp-unlocked';},700);
+  S.xp += 100;
+  document.getElementById('xp-bar').style.width = Math.min(S.xp/300*100,100)+'%';
+  document.getElementById('xp-now').textContent = S.xp+' XP';
+  document.getElementById('lb-pts').textContent = S.xp;
+  var done = S.approved.filter(Boolean).length;
+  var lvls = ['','LEVEL 2 — EXPLORER','LEVEL 3 — LOCAL','LEVEL 4 — SEGOVIAN'];
+  document.getElementById('player-level').textContent = lvls[done];
+  if (done === 3) {
+    document.getElementById('prize-teaser').style.display='none';
+    document.getElementById('win-card').className='win-card show';
+    toast('🏆 All challenges complete! Time for the prize!');
+  } else {
+    unlockNext(idx+1);
+    toast('🎉 Challenge '+(idx+1)+' approved! <strong>+100 XP</strong>');
+  }
+  renderQ();
+}
+
+function reject(qi) {
+  var item = S.queue[qi]; var idx = item.idx;
+  S.queue.splice(qi,1);
+  document.getElementById('sub-'+idx).disabled = false;
+  document.getElementById('sub-'+idx).textContent = 'Re-submit';
+  setPill(idx,'pill-retry','TRY AGAIN');
+  toast('❌ Rejected — try again!');
+  renderQ();
+}
+
+function unlockNext(idx) {
+  if (idx > 2 || S.approved[idx]) return;
+  document.getElementById('cc-'+idx).className = 'cc active';
+  document.getElementById('ccb-'+idx).style.display = 'flex';
+  var n = document.getElementById('ccn-'+idx); n.className='cc-num'; n.textContent='0'+(idx+1);
+  setPill(idx,'pill-active','ACTIVE');
+}
+
+function renderQ() {
+  var body = document.getElementById('q-body');
+  var badge = document.getElementById('q-badge');
+  badge.textContent = S.queue.length;
+  badge.className = S.queue.length > 0 ? 'admin-badge' : 'admin-badge zero';
+  if (!S.queue.length) { body.innerHTML='<div class="q-empty">No submissions yet…</div>'; return; }
+  body.innerHTML = S.queue.map(function(item,i){
+    return '<div class="q-item">'
+      +'<div class="q-icon">'+item.icon+'</div>'
+      +'<div style="flex:1"><div class="q-label">'+esc(item.label)+'</div>'
+      +'<div class="q-sub">Challenge '+(item.idx+1)+' · Emilio</div></div>'
+      +'<div class="q-actions">'
+      +'<button class="btn-approve" onclick="approve('+i+')">✓ Approve</button>'
+      +'<button class="btn-reject" onclick="reject('+i+')">✗ Reject</button>'
+      +'</div></div>';
+  }).join('');
+}
+
+function setPill(idx, cls, text) {
+  var el = document.getElementById('ccp-'+idx);
+  el.className = 'cc-pill '+cls; el.textContent = text;
+}
+
+function toast(msg) {
+  var t = document.getElementById('toast');
+  t.innerHTML = msg; t.className = 'toast show';
+  clearTimeout(t._t); t._t = setTimeout(function(){t.className='toast';},3800);
+}
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
