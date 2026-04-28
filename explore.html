@@ -3,174 +3,301 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Explore Quests — Segovia Passport</title>
+<title>Explore Segovia — Segovia Passport</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 :root {
-  --cyan: #00E5FF; --magenta: #FF00CC; --yellow: #FFE600;
-  --black: #0a0a0a; --white: #ffffff;
+  --cyan: #00E5FF; --magenta: #FF00CC; --yellow: #FFE600; --green: #00FF78;
+  --black: #080810; --card: #0e0e1a; --border: rgba(255,255,255,0.07);
   --font-display: 'Barlow Condensed', sans-serif;
   --font-body: 'Barlow', sans-serif;
 }
-body { font-family: var(--font-body); background: var(--black); color: var(--white); overflow-x: hidden; }
+body { font-family: var(--font-body); background: var(--black); color: #fff; overflow-x: hidden; }
 
-/* NAV */
-.nav { position:fixed; top:0; left:0; right:0; z-index:200; display:flex; align-items:center; justify-content:space-between; padding:0 2.5rem; height:64px; background:var(--black); border-bottom:1px solid rgba(0,229,255,0.15); }
-.nav-logo { display:flex; align-items:center; gap:0.6rem; text-decoration:none; }
-.nav-logo-icon { font-size:1.3rem; }
-.nav-logo-text { font-family:var(--font-display); font-size:1.1rem; font-weight:900; letter-spacing:0.05em; color:var(--cyan); }
-.nav-links { display:flex; align-items:center; gap:1.5rem; }
-.nav-link { font-family:var(--font-body); font-size:0.85rem; font-weight:700; color:rgba(255,255,255,0.4); text-decoration:none; letter-spacing:0.03em; text-transform:uppercase; transition:color 0.15s; }
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-track { background: #000; } ::-webkit-scrollbar-thumb { background: rgba(0,229,255,0.3); }
+
+/* ── NAV ── */
+.nav { position:fixed; top:0; left:0; right:0; z-index:300; display:flex; align-items:center; justify-content:space-between; padding:0 2rem; height:60px; background:rgba(8,8,16,0.85); backdrop-filter:blur(20px); border-bottom:1px solid rgba(0,229,255,0.1); }
+.nav-logo { display:flex; align-items:center; gap:0.5rem; text-decoration:none; }
+.nav-logo-icon { font-size:1.2rem; }
+.nav-logo-text { font-family:var(--font-display); font-size:1rem; font-weight:900; letter-spacing:0.06em; background:linear-gradient(135deg,var(--cyan),var(--magenta)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.nav-links { display:flex; align-items:center; gap:1.2rem; }
+.nav-link { font-size:0.8rem; font-weight:700; color:rgba(255,255,255,0.35); text-decoration:none; letter-spacing:0.05em; text-transform:uppercase; transition:color 0.15s; }
 .nav-link:hover, .nav-link.active { color:var(--cyan); }
-.nav-cta { font-family:var(--font-display); font-size:0.92rem; font-weight:700; letter-spacing:0.05em; text-decoration:none; background:var(--magenta); color:var(--white); padding:7px 18px; transition:background 0.15s; text-transform:uppercase; }
-.nav-cta:hover { background:#ff33dd; }
+.nav-cta { font-family:var(--font-display); font-size:0.88rem; font-weight:700; letter-spacing:0.06em; text-decoration:none; background:linear-gradient(135deg,var(--magenta),#ff6b9d); color:#fff; padding:7px 18px; border-radius:4px; transition:opacity 0.15s; text-transform:uppercase; box-shadow:0 0 18px rgba(255,0,204,0.35); }
+.nav-cta:hover { opacity:0.85; }
 
-/* PAGE HEADER */
-.page-header { padding:6rem 3rem 3rem; border-bottom:1px solid rgba(255,255,255,0.05); }
-.page-eyebrow { font-family:var(--font-display); font-size:0.7rem; font-weight:700; letter-spacing:0.28em; color:var(--cyan); margin-bottom:0.5rem; }
-.page-title { font-family:var(--font-display); font-size:clamp(2.8rem,6vw,5rem); font-weight:900; line-height:0.95; letter-spacing:-0.01em; }
-.page-title span { color:var(--magenta); }
-.page-sub { font-size:0.95rem; color:rgba(255,255,255,0.4); margin-top:1rem; max-width:55ch; line-height:1.7; }
+/* ── HERO ── */
+.hero { min-height:100vh; padding-top:60px; display:grid; grid-template-columns:1fr 420px; align-items:center; gap:3rem; padding-left:3rem; padding-right:2rem; position:relative; overflow:hidden; }
+.hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 60% 60% at 70% 40%, rgba(0,229,255,0.06) 0%, transparent 70%), radial-gradient(ellipse 40% 50% at 20% 60%, rgba(255,0,204,0.05) 0%, transparent 70%); pointer-events:none; }
+.hero-grid-bg { position:absolute; inset:0; background-image:linear-gradient(rgba(0,229,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.04) 1px, transparent 1px); background-size:60px 60px; pointer-events:none; }
 
-/* TAB BAR */
-.tab-bar { display:flex; gap:0; border-bottom:1px solid rgba(255,255,255,0.06); padding:0 3rem; }
-.tab { font-family:var(--font-display); font-size:0.82rem; font-weight:700; letter-spacing:0.12em; color:rgba(255,255,255,0.3); text-transform:uppercase; padding:1rem 1.5rem; border-bottom:2px solid transparent; cursor:pointer; transition:all 0.15s; text-decoration:none; }
-.tab:hover { color:rgba(255,255,255,0.7); }
-.tab.active { color:var(--cyan); border-bottom-color:var(--cyan); }
+.hero-left { position:relative; z-index:2; }
+.hero-tag { display:inline-flex; align-items:center; gap:0.5rem; background:rgba(0,229,255,0.08); border:1px solid rgba(0,229,255,0.2); color:var(--cyan); font-family:var(--font-display); font-size:0.72rem; font-weight:700; letter-spacing:0.2em; padding:5px 14px; margin-bottom:1.5rem; text-transform:uppercase; }
+.live-dot { width:6px; height:6px; border-radius:50%; background:var(--green); animation:pulse 1.5s infinite; flex-shrink:0; }
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(0.8)} }
+.hero-h1 { font-family:var(--font-display); font-size:clamp(3.2rem,6vw,5.5rem); font-weight:900; line-height:0.92; letter-spacing:-0.02em; margin-bottom:1.2rem; }
+.h1-line1 { color:#fff; display:block; }
+.h1-line2 { display:block; background:linear-gradient(135deg,var(--cyan) 0%,var(--magenta) 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.hero-sub { font-size:1rem; line-height:1.7; color:rgba(255,255,255,0.45); max-width:46ch; margin-bottom:2.5rem; }
+.hero-actions { display:flex; gap:0.8rem; flex-wrap:wrap; }
+.btn-glow { display:inline-flex; align-items:center; gap:0.5rem; font-family:var(--font-display); font-size:1rem; font-weight:700; letter-spacing:0.06em; text-decoration:none; background:linear-gradient(135deg,var(--magenta),#cc00a3); color:#fff; padding:13px 28px; border:none; cursor:pointer; transition:all 0.2s; text-transform:uppercase; box-shadow:0 0 30px rgba(255,0,204,0.4); position:relative; overflow:hidden; }
+.btn-glow::after { content:''; position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,255,255,0.15),transparent); pointer-events:none; }
+.btn-glow:hover { transform:translateY(-2px); box-shadow:0 0 45px rgba(255,0,204,0.6); }
+.btn-outline { display:inline-flex; align-items:center; gap:0.5rem; font-family:var(--font-display); font-size:0.95rem; font-weight:700; letter-spacing:0.06em; text-decoration:none; background:transparent; color:var(--cyan); padding:12px 24px; border:1px solid rgba(0,229,255,0.35); cursor:pointer; transition:all 0.2s; text-transform:uppercase; }
+.btn-outline:hover { background:rgba(0,229,255,0.08); border-color:var(--cyan); }
 
-/* MAIN CONTENT */
-.content { max-width:1200px; margin:0 auto; padding:3rem; }
+/* ── MISSION CARD (hero right) ── */
+.mission-card { position:relative; z-index:2; background:rgba(14,14,26,0.9); border:1px solid rgba(0,229,255,0.15); border-radius:16px; padding:1.5rem; backdrop-filter:blur(20px); box-shadow:0 0 60px rgba(0,229,255,0.06), inset 0 1px 0 rgba(255,255,255,0.05); }
+.mc-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.2rem; padding-bottom:1rem; border-bottom:1px solid rgba(255,255,255,0.06); }
+.mc-title { font-family:var(--font-display); font-size:0.65rem; font-weight:700; letter-spacing:0.25em; color:rgba(255,255,255,0.2); }
+.mc-badge { background:linear-gradient(135deg,var(--magenta),#cc00a3); font-family:var(--font-display); font-size:0.62rem; font-weight:700; letter-spacing:0.12em; color:#fff; padding:3px 10px; border-radius:20px; animation:glow-badge 2s infinite; }
+@keyframes glow-badge { 0%,100%{box-shadow:0 0 8px rgba(255,0,204,0.4)} 50%{box-shadow:0 0 20px rgba(255,0,204,0.7)} }
+.mc-mission-title { font-family:var(--font-display); font-size:1.4rem; font-weight:900; color:#fff; margin-bottom:1.2rem; line-height:1.1; }
+.mc-steps { display:flex; flex-direction:column; gap:0.6rem; margin-bottom:1.4rem; }
+.mc-step { display:flex; align-items:center; gap:0.75rem; padding:0.7rem 0.9rem; background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.05); border-radius:8px; transition:all 0.2s; }
+.mc-step:hover { border-color:rgba(0,229,255,0.2); background:rgba(0,229,255,0.04); }
+.mc-step-icon { font-size:1.1rem; flex-shrink:0; }
+.mc-step-text { font-size:0.82rem; color:rgba(255,255,255,0.55); flex:1; line-height:1.4; }
+.mc-step-xp { font-family:var(--font-display); font-size:0.7rem; font-weight:700; color:var(--cyan); flex-shrink:0; }
+.mc-reward { background:linear-gradient(135deg,rgba(255,230,0,0.08),rgba(255,0,204,0.05)); border:1px solid rgba(255,230,0,0.2); border-radius:10px; padding:0.9rem 1rem; display:flex; align-items:center; gap:0.75rem; margin-bottom:1.2rem; }
+.mc-reward-icon { font-size:1.4rem; }
+.mc-reward-text { font-size:0.78rem; color:rgba(255,255,255,0.45); line-height:1.5; }
+.mc-reward-text strong { color:var(--yellow); font-weight:700; }
+.mc-cta { display:block; width:100%; font-family:var(--font-display); font-size:0.95rem; font-weight:700; letter-spacing:0.08em; text-align:center; text-decoration:none; background:linear-gradient(135deg,var(--magenta),#cc00a3); color:#fff; padding:13px; border:none; cursor:pointer; transition:all 0.2s; text-transform:uppercase; border-radius:6px; box-shadow:0 0 24px rgba(255,0,204,0.35); }
+.mc-cta:hover { box-shadow:0 0 40px rgba(255,0,204,0.6); transform:translateY(-1px); }
 
-/* SECTION TITLES */
-.sec-eyebrow { font-family:var(--font-display); font-size:0.65rem; font-weight:700; letter-spacing:0.28em; color:var(--magenta); margin-bottom:0.4rem; }
-.sec-title { font-family:var(--font-display); font-size:clamp(1.8rem,3vw,2.6rem); font-weight:900; color:var(--white); margin-bottom:0.4rem; }
-.sec-sub { font-size:0.88rem; color:rgba(255,255,255,0.35); line-height:1.6; max-width:60ch; margin-bottom:2rem; }
+/* ── STATS BAR ── */
+.stats-bar { display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid var(--border); border-bottom:1px solid var(--border); background:rgba(14,14,26,0.6); backdrop-filter:blur(10px); }
+.stat-item { padding:1.2rem 2rem; border-right:1px solid var(--border); display:flex; flex-direction:column; gap:3px; }
+.stat-item:last-child { border-right:none; }
+.stat-val { font-family:var(--font-display); font-size:1.8rem; font-weight:900; line-height:1; background:linear-gradient(135deg,var(--cyan),var(--magenta)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.stat-lbl { font-size:0.72rem; color:rgba(255,255,255,0.25); letter-spacing:0.08em; text-transform:uppercase; }
 
-/* FILTER CHIPS */
+/* ── SECTION WRAPPER ── */
+.section { padding:5rem 3rem; }
+.section-sm { padding:3rem 3rem; }
+.sec-eyebrow { font-family:var(--font-display); font-size:0.65rem; font-weight:700; letter-spacing:0.3em; color:var(--magenta); margin-bottom:0.4rem; text-transform:uppercase; }
+.sec-title { font-family:var(--font-display); font-size:clamp(2rem,4vw,3rem); font-weight:900; line-height:1; margin-bottom:0.5rem; }
+.sec-sub { font-size:0.9rem; color:rgba(255,255,255,0.35); line-height:1.7; max-width:60ch; margin-bottom:2.5rem; }
+
+/* ── PROGRESSION ── */
+.progression-wrap { display:grid; grid-template-columns:320px 1fr; gap:3rem; align-items:start; }
+.level-card { background:linear-gradient(135deg,rgba(0,229,255,0.08) 0%, rgba(255,0,204,0.05) 100%); border:1px solid rgba(0,229,255,0.2); border-radius:16px; padding:2rem; position:relative; overflow:hidden; }
+.level-card::before { content:''; position:absolute; top:-40px; right:-40px; width:120px; height:120px; border-radius:50%; background:radial-gradient(circle, rgba(0,229,255,0.15) 0%, transparent 70%); }
+.lc-avatar { width:72px; height:72px; border-radius:50%; border:3px solid rgba(0,229,255,0.4); overflow:hidden; margin-bottom:1rem; position:relative; z-index:1; }
+.lc-avatar img { width:100%; height:100%; object-fit:cover; object-position:center top; }
+.lc-avatar-fallback { width:72px; height:72px; border-radius:50%; border:3px solid rgba(0,229,255,0.4); background:var(--cyan); color:#000; font-family:var(--font-display); font-size:1.8rem; font-weight:900; display:flex; align-items:center; justify-content:center; margin-bottom:1rem; }
+.lc-name { font-family:var(--font-display); font-size:1.6rem; font-weight:900; letter-spacing:0.05em; margin-bottom:3px; }
+.lc-level { display:inline-flex; align-items:center; gap:0.4rem; background:rgba(0,229,255,0.1); border:1px solid rgba(0,229,255,0.25); color:var(--cyan); font-family:var(--font-display); font-size:0.65rem; font-weight:700; letter-spacing:0.15em; padding:4px 10px; border-radius:20px; margin-bottom:1.4rem; }
+.xp-label { display:flex; justify-content:space-between; font-size:0.65rem; color:rgba(0,229,255,0.4); font-weight:600; letter-spacing:0.05em; margin-bottom:6px; }
+.xp-track { height:6px; background:rgba(255,255,255,0.06); border-radius:99px; overflow:hidden; margin-bottom:1.4rem; }
+.xp-fill { height:100%; background:linear-gradient(90deg,var(--cyan),var(--magenta)); border-radius:99px; width:40%; position:relative; }
+.xp-fill::after { content:''; position:absolute; right:0; top:50%; transform:translateY(-50%); width:10px; height:10px; border-radius:50%; background:#fff; box-shadow:0 0 8px var(--cyan); }
+.badges-title { font-family:var(--font-display); font-size:0.6rem; font-weight:700; letter-spacing:0.2em; color:rgba(255,255,255,0.18); margin-bottom:0.75rem; }
+.badges-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; }
+.badge-item { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07); border-radius:8px; padding:0.6rem 0.75rem; display:flex; align-items:center; gap:0.5rem; transition:all 0.2s; }
+.badge-item.earned { border-color:rgba(0,229,255,0.25); background:rgba(0,229,255,0.05); }
+.badge-item.earned .badge-icon { filter:none; }
+.badge-icon { font-size:1.1rem; filter:grayscale(1) opacity(0.3); transition:filter 0.3s; }
+.badge-name { font-size:0.68rem; color:rgba(255,255,255,0.25); font-weight:600; line-height:1.3; }
+.badge-item.earned .badge-name { color:rgba(255,255,255,0.6); }
+
+/* PLACE CARDS */
+.places-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1rem; }
+.place-card { background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; transition:all 0.25s; cursor:pointer; position:relative; }
+.place-card:hover { border-color:rgba(0,229,255,0.3); transform:translateY(-3px); box-shadow:0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(0,229,255,0.1); }
+.place-card.featured { border-color:rgba(255,0,204,0.25); }
+.place-card.featured::before { content:'QUEST LIVE'; position:absolute; top:12px; right:12px; background:var(--magenta); color:#fff; font-family:var(--font-display); font-size:0.58rem; font-weight:700; letter-spacing:0.15em; padding:3px 9px; border-radius:20px; z-index:1; animation:glow-badge 2s infinite; }
+.pc-banner { height:90px; display:flex; align-items:center; justify-content:center; font-size:2.5rem; position:relative; overflow:hidden; }
+.pc-banner-tavern { background:linear-gradient(135deg,#1a0a00,#2d1200); }
+.pc-banner-plaza { background:linear-gradient(135deg,#00101a,#001f2e); }
+.pc-banner-bar { background:linear-gradient(135deg,#0d001a,#1a0033); }
+.pc-banner-cafe { background:linear-gradient(135deg,#0a0800,#1a1400); }
+.pc-banner-alcazar { background:linear-gradient(135deg,#000a1a,#00193d); }
+.pc-banner::after { content:''; position:absolute; inset:0; background:radial-gradient(circle at 50% 120%,rgba(255,255,255,0.06),transparent 60%); }
+.pc-body { padding:1.1rem; }
+.pc-name { font-family:var(--font-display); font-size:1.1rem; font-weight:900; color:#fff; margin-bottom:2px; }
+.pc-type { font-size:0.72rem; color:rgba(255,255,255,0.25); margin-bottom:0.9rem; letter-spacing:0.04em; }
+.pc-tags { display:flex; flex-direction:column; gap:4px; margin-bottom:1rem; }
+.pc-tag { display:flex; align-items:center; gap:0.4rem; font-size:0.75rem; color:rgba(255,255,255,0.4); }
+.pc-tag.highlight { color:var(--cyan); }
+.pc-tag.reward { color:var(--yellow); }
+.pc-tag.popular { color:var(--magenta); }
+.pc-footer { display:flex; align-items:center; justify-content:space-between; padding-top:0.9rem; border-top:1px solid var(--border); }
+.pc-reward { font-family:var(--font-display); font-size:0.72rem; font-weight:700; color:var(--yellow); }
+.pc-go { font-family:var(--font-display); font-size:0.78rem; font-weight:700; letter-spacing:0.08em; color:var(--magenta); text-decoration:none; text-transform:uppercase; display:flex; align-items:center; gap:0.3rem; transition:gap 0.15s; }
+.pc-go:hover { gap:0.5rem; }
+
+/* ── SOCIAL / WHO'S OUT ── */
+.social-wrap { display:grid; grid-template-columns:1fr 340px; gap:2rem; }
+.whos-out { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:1.5rem; }
+.wo-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.2rem; }
+.wo-title { font-family:var(--font-display); font-size:0.65rem; font-weight:700; letter-spacing:0.22em; color:rgba(255,255,255,0.2); text-transform:uppercase; }
+.wo-count { background:rgba(0,255,120,0.1); border:1px solid rgba(0,255,120,0.2); color:var(--green); font-family:var(--font-display); font-size:0.65rem; font-weight:700; padding:3px 10px; border-radius:20px; letter-spacing:0.1em; }
+.wo-list { display:flex; flex-direction:column; gap:0.5rem; }
+.wo-row { display:flex; align-items:center; gap:0.75rem; padding:0.6rem 0.75rem; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.04); border-radius:8px; transition:all 0.15s; }
+.wo-row:hover { border-color:rgba(0,229,255,0.15); background:rgba(0,229,255,0.03); }
+.wo-av { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:0.9rem; font-weight:900; flex-shrink:0; }
+.wo-av-emilio { overflow:hidden; border:2px solid rgba(0,229,255,0.4); }
+.wo-av-emilio img { width:100%; height:100%; object-fit:cover; object-position:center top; }
+.wo-info { flex:1; min-width:0; }
+.wo-name { font-size:0.82rem; font-weight:700; color:rgba(255,255,255,0.7); margin-bottom:2px; }
+.wo-status { font-size:0.7rem; color:rgba(255,255,255,0.25); }
+.wo-loc { font-size:0.7rem; color:rgba(0,229,255,0.45); text-align:right; flex-shrink:0; }
+.wo-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.dot-active { background:var(--green); box-shadow:0 0 6px var(--green); }
+.dot-recent { background:var(--yellow); }
+
+.team-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:1.5rem; }
+.team-header { font-family:var(--font-display); font-size:0.65rem; font-weight:700; letter-spacing:0.22em; color:rgba(255,255,255,0.2); margin-bottom:1.2rem; }
+.team-row { display:flex; align-items:center; gap:0.6rem; padding:0.7rem 0; border-bottom:1px solid rgba(255,255,255,0.04); }
+.team-row:last-child { border-bottom:none; }
+.team-pos { font-family:var(--font-display); font-size:1.1rem; font-weight:900; color:rgba(255,255,255,0.12); width:22px; flex-shrink:0; }
+.team-pos.gold { color:var(--yellow); }
+.team-pos.silver { color:#aaa; }
+.team-pos.mine { color:var(--cyan); }
+.team-avatars { display:flex; margin-right:0.3rem; }
+.team-av { width:26px; height:26px; border-radius:50%; border:2px solid var(--card); background:rgba(255,255,255,0.08); display:flex; align-items:center; justify-content:center; font-size:0.65rem; font-weight:700; color:rgba(255,255,255,0.4); margin-left:-6px; flex-shrink:0; }
+.team-av:first-child { margin-left:0; }
+.team-av.me-av { background:var(--cyan); color:#000; border-color:var(--card); overflow:hidden; }
+.team-av.me-av img { width:100%; height:100%; object-fit:cover; object-position:center top; }
+.team-name { flex:1; font-size:0.8rem; color:rgba(255,255,255,0.4); }
+.team-name.mine { color:rgba(0,229,255,0.7); font-weight:700; }
+.team-pts { font-family:var(--font-display); font-size:0.82rem; font-weight:700; color:rgba(255,255,255,0.18); }
+.team-pts.mine { color:var(--cyan); }
+
+/* ── SURPRISE REWARDS ── */
+.surprise-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; }
+.surprise-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:1.5rem 1rem; text-align:center; transition:all 0.25s; cursor:pointer; position:relative; overflow:hidden; }
+.surprise-card:hover { transform:translateY(-3px); }
+.surprise-card::before { content:''; position:absolute; inset:0; opacity:0; transition:opacity 0.3s; }
+.sc-mystery::before { background:radial-gradient(circle at 50% 0%,rgba(255,0,204,0.12),transparent 70%); }
+.sc-drink::before { background:radial-gradient(circle at 50% 0%,rgba(0,229,255,0.1),transparent 70%); }
+.sc-event::before { background:radial-gradient(circle at 50% 0%,rgba(255,230,0,0.1),transparent 70%); }
+.sc-discount::before { background:radial-gradient(circle at 50% 0%,rgba(0,255,120,0.1),transparent 70%); }
+.surprise-card:hover::before { opacity:1; }
+.sc-icon { font-size:2rem; margin-bottom:0.75rem; display:block; }
+.sc-title { font-family:var(--font-display); font-size:0.95rem; font-weight:900; color:#fff; margin-bottom:0.4rem; }
+.sc-sub { font-size:0.72rem; color:rgba(255,255,255,0.3); line-height:1.5; }
+.sc-tag { display:inline-block; margin-top:0.75rem; font-family:var(--font-display); font-size:0.6rem; font-weight:700; letter-spacing:0.12em; padding:3px 10px; border-radius:20px; }
+.sc-mystery .sc-tag { background:rgba(255,0,204,0.1); color:var(--magenta); border:1px solid rgba(255,0,204,0.2); }
+.sc-drink .sc-tag { background:rgba(0,229,255,0.1); color:var(--cyan); border:1px solid rgba(0,229,255,0.2); }
+.sc-event .sc-tag { background:rgba(255,230,0,0.1); color:var(--yellow); border:1px solid rgba(255,230,0,0.2); }
+.sc-discount .sc-tag { background:rgba(0,255,120,0.08); color:var(--green); border:1px solid rgba(0,255,120,0.2); }
+
+/* ── LEADERBOARD ── */
+.lb-wrap { display:grid; grid-template-columns:1fr 280px; gap:2rem; }
+.lb-table { background:var(--card); border:1px solid var(--border); border-radius:14px; overflow:hidden; }
+.lb-thead { display:grid; grid-template-columns:48px 1fr 80px 70px; padding:0.7rem 1.2rem; border-bottom:1px solid var(--border); }
+.lb-th { font-family:var(--font-display); font-size:0.6rem; font-weight:700; letter-spacing:0.18em; color:rgba(255,255,255,0.15); text-transform:uppercase; }
+.lb-th:last-child { text-align:right; }
+.lb-trow { display:grid; grid-template-columns:48px 1fr 80px 70px; padding:0.8rem 1.2rem; border-bottom:1px solid rgba(255,255,255,0.025); align-items:center; transition:background 0.12s; }
+.lb-trow:hover { background:rgba(255,255,255,0.02); }
+.lb-trow.me { background:rgba(0,229,255,0.04); border-left:2px solid var(--cyan); }
+.lb-trow:last-child { border-bottom:none; }
+.lb-rank { font-family:var(--font-display); font-size:1.1rem; font-weight:900; color:rgba(255,255,255,0.12); }
+.lb-rank.gold { color:var(--yellow); filter:drop-shadow(0 0 6px rgba(255,230,0,0.5)); }
+.lb-rank.silver { color:#bbb; }
+.lb-rank.bronze { color:#c97c3a; }
+.lb-rank.mine { color:var(--cyan); }
+.lb-player { display:flex; align-items:center; gap:0.6rem; }
+.lb-av { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:0.75rem; font-weight:900; flex-shrink:0; background:rgba(255,255,255,0.06); color:rgba(255,255,255,0.3); }
+.lb-av.me-av { background:var(--cyan); color:#000; overflow:hidden; }
+.lb-av.me-av img { width:100%; height:100%; object-fit:cover; object-position:center top; }
+.lb-pname { font-size:0.82rem; color:rgba(255,255,255,0.4); }
+.lb-pname.mine { color:var(--cyan); font-weight:700; }
+.lb-quests { font-family:var(--font-display); font-size:0.82rem; color:rgba(255,255,255,0.18); }
+.lb-score { font-family:var(--font-display); font-size:0.9rem; font-weight:700; color:rgba(255,255,255,0.2); text-align:right; }
+.lb-score.mine { color:var(--cyan); }
+
+.lb-side-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:1.4rem; margin-bottom:1rem; }
+.lb-side-title { font-family:var(--font-display); font-size:0.6rem; font-weight:700; letter-spacing:0.2em; color:rgba(255,255,255,0.15); margin-bottom:1rem; }
+.my-stats { display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; }
+.my-stat { background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.05); border-radius:8px; padding:0.9rem 0.75rem; text-align:center; }
+.my-stat-val { font-family:var(--font-display); font-size:1.7rem; font-weight:900; color:var(--cyan); line-height:1; margin-bottom:3px; }
+.my-stat-lbl { font-size:0.62rem; color:rgba(255,255,255,0.18); letter-spacing:0.08em; text-transform:uppercase; }
+.next-tier { background:linear-gradient(135deg,rgba(255,230,0,0.06),rgba(255,0,204,0.04)); border:1px solid rgba(255,230,0,0.15); border-radius:12px; padding:1.2rem; text-align:center; }
+.nt-icon { font-size:1.8rem; margin-bottom:0.5rem; }
+.nt-title { font-family:var(--font-display); font-size:1rem; font-weight:900; color:var(--yellow); margin-bottom:0.3rem; }
+.nt-sub { font-size:0.75rem; color:rgba(255,255,255,0.3); line-height:1.6; margin-bottom:1rem; }
+.nt-bar-wrap { height:5px; background:rgba(255,255,255,0.06); border-radius:99px; overflow:hidden; margin-bottom:0.4rem; }
+.nt-bar { height:100%; background:linear-gradient(90deg,var(--yellow),var(--magenta)); border-radius:99px; width:60%; }
+.nt-progress { font-size:0.65rem; color:rgba(255,255,255,0.2); }
+
+/* ── FAQ ── */
+.faq-wrap { display:grid; grid-template-columns:240px 1fr; gap:3rem; }
+.faq-sticky-title { font-family:var(--font-display); font-size:clamp(1.8rem,3vw,2.5rem); font-weight:900; line-height:1; position:sticky; top:76px; }
+.faq-sticky-title span { background:linear-gradient(135deg,var(--cyan),var(--magenta)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.faq-list {}
+.faq-item { border-bottom:1px solid rgba(255,255,255,0.05); }
+.faq-item:first-child { border-top:1px solid rgba(255,255,255,0.05); }
+.faq-q { font-size:0.92rem; font-weight:700; color:rgba(255,255,255,0.6); padding:1.3rem 0; cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:1rem; transition:color 0.15s; }
+.faq-q:hover { color:#fff; }
+.faq-item.open .faq-q { color:var(--cyan); }
+.faq-toggle { font-size:1.2rem; color:rgba(255,255,255,0.15); flex-shrink:0; transition:transform 0.25s; }
+.faq-item.open .faq-toggle { transform:rotate(45deg); color:var(--cyan); }
+.faq-a { font-size:0.87rem; line-height:1.8; color:rgba(255,255,255,0.35); max-height:0; overflow:hidden; transition:max-height 0.35s ease, padding 0.2s; }
+.faq-item.open .faq-a { max-height:200px; padding-bottom:1.3rem; }
+
+/* ── CTA BANNER ── */
+.cta-banner { position:relative; overflow:hidden; padding:5rem 3rem; text-align:center; background:linear-gradient(135deg,rgba(255,0,204,0.12) 0%,rgba(0,229,255,0.06) 100%); border-top:1px solid rgba(255,0,204,0.15); }
+.cta-banner::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse 60% 80% at 50% 0%,rgba(255,0,204,0.15),transparent 70%); pointer-events:none; }
+.cta-title { font-family:var(--font-display); font-size:clamp(2.5rem,5vw,4rem); font-weight:900; line-height:0.95; margin-bottom:1rem; position:relative; z-index:1; }
+.cta-sub { font-size:1rem; color:rgba(255,255,255,0.45); margin-bottom:2rem; position:relative; z-index:1; }
+.cta-actions { display:flex; gap:1rem; justify-content:center; flex-wrap:wrap; position:relative; z-index:1; }
+
+/* ── FOOTER ── */
+.footer { background:#050508; padding:2rem 3rem; border-top:1px solid rgba(255,255,255,0.04); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
+.footer-logo { font-family:var(--font-display); font-size:1rem; font-weight:900; background:linear-gradient(135deg,var(--cyan),var(--magenta)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.footer-links { display:flex; gap:1.5rem; }
+.footer-link { font-size:0.75rem; color:rgba(255,255,255,0.18); text-decoration:none; transition:color 0.15s; }
+.footer-link:hover { color:rgba(255,255,255,0.5); }
+.footer-copy { font-size:0.72rem; color:rgba(255,255,255,0.1); }
+
+/* ── DIVIDER ── */
+.divider { height:1px; background:linear-gradient(90deg,transparent,rgba(255,255,255,0.06),transparent); margin:0 3rem; }
+
+/* ── FILTER CHIPS ── */
 .filter-row { display:flex; gap:0.5rem; flex-wrap:wrap; margin-bottom:2rem; }
-.chip { font-family:var(--font-display); font-size:0.72rem; font-weight:700; letter-spacing:0.1em; padding:6px 16px; border:1px solid rgba(255,255,255,0.1); color:rgba(255,255,255,0.35); cursor:pointer; transition:all 0.15s; text-transform:uppercase; background:transparent; }
-.chip:hover { border-color:rgba(255,255,255,0.3); color:rgba(255,255,255,0.7); }
-.chip.on { background:rgba(0,229,255,0.1); border-color:rgba(0,229,255,0.35); color:var(--cyan); }
+.chip { font-family:var(--font-display); font-size:0.7rem; font-weight:700; letter-spacing:0.1em; padding:6px 16px; border:1px solid rgba(255,255,255,0.08); color:rgba(255,255,255,0.3); cursor:pointer; transition:all 0.15s; text-transform:uppercase; background:transparent; border-radius:99px; }
+.chip:hover { border-color:rgba(255,255,255,0.25); color:rgba(255,255,255,0.6); }
+.chip.on { background:rgba(0,229,255,0.1); border-color:rgba(0,229,255,0.3); color:var(--cyan); }
 
-/* QUEST GRID */
-.quest-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:1rem; margin-bottom:4rem; }
-.qcard { background:#111; border:1px solid rgba(255,255,255,0.06); overflow:hidden; transition:border-color 0.2s, transform 0.2s; cursor:pointer; }
-.qcard:hover { border-color:rgba(0,229,255,0.25); transform:translateY(-2px); }
-.qcard.featured { border-color:rgba(255,0,204,0.3); }
-.qcard-top { padding:1.4rem 1.4rem 0; display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:1rem; }
-.qcard-icon { width:48px; height:48px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; flex-shrink:0; }
-.icon-cyan { background:rgba(0,229,255,0.1); }
-.icon-magenta { background:rgba(255,0,204,0.1); }
-.icon-yellow { background:rgba(255,230,0,0.1); }
-.icon-green { background:rgba(0,255,120,0.08); }
-.qcard-badges { display:flex; gap:5px; flex-direction:column; align-items:flex-end; }
-.qbadge { font-family:var(--font-display); font-size:0.58rem; font-weight:700; letter-spacing:0.12em; padding:3px 9px; text-transform:uppercase; }
-.badge-new { background:var(--magenta); color:var(--white); }
-.badge-popular { background:rgba(255,230,0,0.15); color:var(--yellow); border:1px solid rgba(255,230,0,0.25); }
+/* ── QUEST CARDS ── */
+.quest-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:1rem; }
+.qcard { background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden; transition:all 0.25s; cursor:pointer; }
+.qcard:hover { border-color:rgba(0,229,255,0.2); transform:translateY(-2px); box-shadow:0 8px 32px rgba(0,0,0,0.4); }
+.qcard.live { border-color:rgba(255,0,204,0.25); }
+.qcard-top { padding:1.2rem 1.2rem 0; display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.9rem; }
+.qcard-icon { width:46px; height:46px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0; }
+.icon-cyan { background:rgba(0,229,255,0.1); } .icon-magenta { background:rgba(255,0,204,0.1); } .icon-yellow { background:rgba(255,230,0,0.1); } .icon-green { background:rgba(0,255,120,0.08); }
+.qcard-badges { display:flex; gap:4px; flex-direction:column; align-items:flex-end; }
+.qbadge { font-family:var(--font-display); font-size:0.58rem; font-weight:700; letter-spacing:0.1em; padding:3px 8px; border-radius:20px; text-transform:uppercase; }
+.badge-live { background:var(--magenta); color:#fff; animation:glow-badge 2s infinite; }
+.badge-popular { background:rgba(255,230,0,0.12); color:var(--yellow); border:1px solid rgba(255,230,0,0.2); }
 .badge-culture { background:rgba(0,229,255,0.1); color:var(--cyan); border:1px solid rgba(0,229,255,0.2); }
 .badge-food { background:rgba(255,120,0,0.12); color:#ff8c00; border:1px solid rgba(255,120,0,0.2); }
 .badge-social { background:rgba(255,0,204,0.1); color:var(--magenta); border:1px solid rgba(255,0,204,0.2); }
 .badge-night { background:rgba(100,0,255,0.15); color:#a66cff; border:1px solid rgba(100,0,255,0.25); }
-.qcard-body { padding:0 1.4rem 1.4rem; }
-.qcard-title { font-family:var(--font-display); font-size:1.15rem; font-weight:900; color:var(--white); margin-bottom:4px; }
-.qcard-desc { font-size:0.78rem; color:rgba(255,255,255,0.3); line-height:1.55; margin-bottom:1rem; }
+.qcard-body { padding:0 1.2rem 1.2rem; }
+.qcard-title { font-family:var(--font-display); font-size:1.1rem; font-weight:900; color:#fff; margin-bottom:4px; }
+.qcard-desc { font-size:0.77rem; color:rgba(255,255,255,0.28); line-height:1.55; margin-bottom:0.9rem; }
 .qcard-meta { display:flex; align-items:center; justify-content:space-between; }
-.qcard-reward { font-family:var(--font-display); font-size:0.78rem; font-weight:700; color:var(--cyan); letter-spacing:0.05em; }
-.qcard-xp { font-family:var(--font-display); font-size:0.72rem; color:rgba(255,255,255,0.2); }
-.qcard-footer { border-top:1px solid rgba(255,255,255,0.04); padding:0.75rem 1.4rem; display:flex; align-items:center; justify-content:space-between; }
-.qcard-loc { font-size:0.72rem; color:rgba(255,255,255,0.2); }
-.qcard-cta { font-family:var(--font-display); font-size:0.72rem; font-weight:700; letter-spacing:0.08em; color:var(--magenta); text-transform:uppercase; text-decoration:none; transition:color 0.15s; }
+.qcard-reward { font-family:var(--font-display); font-size:0.75rem; font-weight:700; color:var(--yellow); }
+.qcard-xp { font-family:var(--font-display); font-size:0.7rem; color:rgba(255,255,255,0.18); }
+.qcard-footer { border-top:1px solid rgba(255,255,255,0.04); padding:0.7rem 1.2rem; display:flex; align-items:center; justify-content:space-between; }
+.qcard-loc { font-size:0.7rem; color:rgba(255,255,255,0.2); }
+.qcard-cta { font-family:var(--font-display); font-size:0.72rem; font-weight:700; letter-spacing:0.08em; color:var(--magenta); text-decoration:none; text-transform:uppercase; transition:color 0.15s; }
 .qcard-cta:hover { color:#ff66ee; }
-
-/* DIVIDER */
-.section-divider { height:1px; background:rgba(255,255,255,0.05); margin:3rem 0; }
-
-/* LEADERBOARD */
-.lb-layout { display:grid; grid-template-columns:1fr 340px; gap:3rem; align-items:start; margin-bottom:4rem; }
-.lb-main {}
-.lb-podium { display:flex; align-items:flex-end; gap:1rem; margin-bottom:2rem; }
-.podium-col { flex:1; display:flex; flex-direction:column; align-items:center; gap:0.5rem; }
-.podium-avatar { width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:1.3rem; font-weight:900; }
-.pod-1 .podium-avatar { width:64px; height:64px; font-size:1.6rem; background:var(--yellow); color:var(--black); border:3px solid rgba(255,230,0,0.4); }
-.pod-2 .podium-avatar { background:#555; color:var(--white); }
-.pod-3 .podium-avatar { background:#7a5230; color:var(--white); }
-.podium-name { font-family:var(--font-display); font-size:0.75rem; font-weight:700; color:rgba(255,255,255,0.5); letter-spacing:0.05em; }
-.pod-1 .podium-name { color:var(--yellow); }
-.podium-pts { font-family:var(--font-display); font-size:1rem; font-weight:900; color:rgba(255,255,255,0.25); }
-.pod-1 .podium-pts { color:var(--yellow); }
-.podium-bar { width:100%; background:rgba(255,255,255,0.04); border-top:2px solid rgba(255,255,255,0.08); }
-.pod-1 .podium-bar { background:rgba(255,230,0,0.06); border-top-color:var(--yellow); height:80px; }
-.pod-2 .podium-bar { height:55px; }
-.pod-3 .podium-bar { height:35px; }
-
-.lb-table { background:#0d0d0d; border:1px solid rgba(255,255,255,0.05); overflow:hidden; }
-.lb-thead { display:grid; grid-template-columns:44px 1fr 80px 80px; padding:0.6rem 1rem; border-bottom:1px solid rgba(255,255,255,0.05); }
-.lb-th { font-family:var(--font-display); font-size:0.58rem; font-weight:700; letter-spacing:0.2em; color:rgba(255,255,255,0.18); text-transform:uppercase; }
-.lb-th:last-child { text-align:right; }
-.lb-trow { display:grid; grid-template-columns:44px 1fr 80px 80px; padding:0.75rem 1rem; border-bottom:1px solid rgba(255,255,255,0.03); align-items:center; transition:background 0.12s; }
-.lb-trow:hover { background:rgba(255,255,255,0.02); }
-.lb-trow.me { background:rgba(0,229,255,0.04); border-left:2px solid var(--cyan); }
-.lb-trow:last-child { border-bottom:none; }
-.lb-rank { font-family:var(--font-display); font-size:1rem; font-weight:900; color:rgba(255,255,255,0.15); }
-.lb-rank.gold { color:var(--yellow); }
-.lb-rank.silver { color:#aaa; }
-.lb-rank.bronze { color:#c97c3a; }
-.lb-rank.mine { color:var(--cyan); }
-.lb-player { display:flex; align-items:center; gap:0.6rem; }
-.lb-av { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--font-display); font-size:0.75rem; font-weight:900; flex-shrink:0; }
-.lb-av-default { background:rgba(255,255,255,0.08); color:rgba(255,255,255,0.3); }
-.lb-av-me { background:var(--cyan); color:var(--black); }
-.lb-pname { font-size:0.82rem; color:rgba(255,255,255,0.45); }
-.lb-pname.mine { color:var(--cyan); font-weight:700; }
-.lb-challenges { font-family:var(--font-display); font-size:0.82rem; color:rgba(255,255,255,0.2); }
-.lb-score { font-family:var(--font-display); font-size:0.88rem; font-weight:700; color:rgba(255,255,255,0.25); text-align:right; }
-.lb-score.mine { color:var(--cyan); }
-
-.lb-side {}
-.lb-side-card { background:#111; border:1px solid rgba(255,255,255,0.06); padding:1.5rem; margin-bottom:1rem; }
-.lb-side-title { font-family:var(--font-display); font-size:0.65rem; font-weight:700; letter-spacing:0.22em; color:rgba(255,255,255,0.2); margin-bottom:1rem; }
-.my-stat-row { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; }
-.my-stat { background:rgba(255,255,255,0.03); padding:1rem; text-align:center; }
-.my-stat-val { font-family:var(--font-display); font-size:1.8rem; font-weight:900; color:var(--cyan); line-height:1; margin-bottom:3px; }
-.my-stat-lbl { font-size:0.65rem; color:rgba(255,255,255,0.2); letter-spacing:0.08em; text-transform:uppercase; }
-.streak-box { background:rgba(255,230,0,0.05); border:1px solid rgba(255,230,0,0.12); padding:1rem; display:flex; align-items:center; gap:0.75rem; margin-top:0.75rem; }
-.streak-emoji { font-size:1.5rem; }
-.streak-text { font-size:0.78rem; color:rgba(255,255,255,0.35); line-height:1.5; }
-.streak-text strong { color:var(--yellow); }
-
-/* FAQ */
-.faq-wrap { display:grid; grid-template-columns:260px 1fr; gap:3rem; margin-bottom:4rem; }
-.faq-left-title { font-family:var(--font-display); font-size:clamp(1.8rem,3vw,2.5rem); font-weight:900; line-height:1.05; color:var(--white); position:sticky; top:80px; }
-.faq-left-title span { color:var(--cyan); }
-.faq-list {}
-.faq-item { padding:1.5rem 0; border-bottom:1px solid rgba(255,255,255,0.06); }
-.faq-item:first-child { border-top:1px solid rgba(255,255,255,0.06); }
-.faq-q { font-size:0.95rem; font-weight:700; color:var(--white); margin-bottom:0.5rem; cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:1rem; }
-.faq-toggle { font-size:1rem; color:rgba(255,255,255,0.2); flex-shrink:0; transition:transform 0.2s; }
-.faq-item.open .faq-toggle { transform:rotate(45deg); color:var(--cyan); }
-.faq-a { font-size:0.88rem; line-height:1.75; color:rgba(255,255,255,0.4); max-height:0; overflow:hidden; transition:max-height 0.3s ease; }
-.faq-item.open .faq-a { max-height:200px; }
-
-/* CTA BANNER */
-.cta-banner { background:var(--magenta); padding:4rem 3rem; display:grid; grid-template-columns:1fr auto; gap:2rem; align-items:center; border-top:2px solid rgba(0,0,0,0.2); }
-.cta-title { font-family:var(--font-display); font-size:clamp(2rem,4vw,3rem); font-weight:900; color:var(--white); line-height:1.05; }
-.cta-sub { font-size:0.88rem; color:rgba(255,255,255,0.7); margin-top:0.5rem; }
-.btn-white { display:inline-block; font-family:var(--font-display); font-size:1rem; font-weight:700; letter-spacing:0.06em; text-decoration:none; background:var(--white); color:var(--magenta); padding:14px 32px; border:none; cursor:pointer; transition:all 0.15s; text-transform:uppercase; white-space:nowrap; }
-.btn-white:hover { background:var(--yellow); color:var(--black); }
-
-/* FOOTER */
-.footer { background:#050505; padding:2.5rem 3rem; border-top:1px solid rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
-.footer-logo { font-family:var(--font-display); font-size:1.1rem; font-weight:900; color:var(--cyan); letter-spacing:0.06em; }
-.footer-links { display:flex; gap:1.5rem; }
-.footer-link { font-size:0.78rem; color:rgba(255,255,255,0.2); text-decoration:none; transition:color 0.15s; }
-.footer-link:hover { color:rgba(255,255,255,0.5); }
-.footer-copy { font-size:0.75rem; color:rgba(255,255,255,0.12); }
 </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav class="nav">
   <a href="index.html" class="nav-logo">
     <span class="nav-logo-icon">🏰</span>
@@ -183,435 +310,549 @@ body { font-family: var(--font-body); background: var(--black); color: var(--whi
   </div>
 </nav>
 
-<div class="page-header">
-  <div class="page-eyebrow">SEGOVIA PASSPORT</div>
-  <h1 class="page-title">Explore<br><span>New Quests</span></h1>
-  <p class="page-sub">From ordering in Spanish to finding the city's oldest monument — every quest earns you stamps, XP, and real rewards across Segovia.</p>
-</div>
+<!-- ── HERO ── -->
+<section class="hero">
+  <div class="hero-grid-bg"></div>
 
-<div class="tab-bar">
-  <a href="#quests" class="tab active">All Quests</a>
-  <a href="#leaderboard" class="tab">Leaderboard</a>
-  <a href="#faq" class="tab">FAQ</a>
-</div>
-
-<div class="content">
-
-  <!-- QUESTS -->
-  <div id="quests" style="padding-top:1rem;">
-    <div class="sec-eyebrow">BROWSE</div>
-    <div class="sec-title">Active Challenges</div>
-    <p class="sec-sub">Complete challenges to earn passport stamps and unlock rewards at partner venues around the city.</p>
-
-    <div class="filter-row">
-      <button class="chip on">All</button>
-      <button class="chip">Culture</button>
-      <button class="chip">Food &amp; Drink</button>
-      <button class="chip">Social</button>
-      <button class="chip">Nightlife</button>
-      <button class="chip">Landmarks</button>
-    </div>
-
-    <div class="quest-grid">
-
-      <!-- ACTIVE: drives purchase → commission -->
-      <div class="qcard featured">
-        <div class="qcard-top">
-          <div class="qcard-icon icon-magenta">🗣</div>
-          <div class="qcard-badges"><span class="qbadge badge-new">ACTIVE</span><span class="qbadge badge-social">Social</span></div>
-        </div>
-        <div class="qcard-body">
-          <div class="qcard-title">Order in Spanish</div>
-          <div class="qcard-desc">Walk up to the bar and order your first drink in Spanish. Record yourself doing it — bartender included. Any partner bar counts.</div>
-          <div class="qcard-meta">
-            <span class="qcard-reward">🍺 Free shot on your order</span>
-            <span class="qcard-xp">+100 XP</span>
-          </div>
-        </div>
-        <div class="qcard-footer">
-          <span class="qcard-loc">📍 Any partner bar</span>
-          <a href="passport.html" class="qcard-cta">Play now →</a>
-        </div>
-      </div>
-
-      <div class="qcard featured">
-        <div class="qcard-top">
-          <div class="qcard-icon icon-cyan">🥂</div>
-          <div class="qcard-badges"><span class="qbadge badge-new">ACTIVE</span><span class="qbadge badge-social">Social</span></div>
-        </div>
-        <div class="qcard-body">
-          <div class="qcard-title">Bring the Squad</div>
-          <div class="qcard-desc">Get 2+ classmates to join you at a partner bar. Take a group selfie with drinks in hand — everyone gets 10% off the whole round.</div>
-          <div class="qcard-meta">
-            <span class="qcard-reward">🥂 10% off the round</span>
-            <span class="qcard-xp">+100 XP</span>
-          </div>
-        </div>
-        <div class="qcard-footer">
-          <span class="qcard-loc">📍 Any partner bar</span>
-          <a href="passport.html" class="qcard-cta">Play now →</a>
-        </div>
-      </div>
-
-      <div class="qcard featured">
-        <div class="qcard-top">
-          <div class="qcard-icon icon-yellow">⭐</div>
-          <div class="qcard-badges"><span class="qbadge badge-new">ACTIVE</span><span class="qbadge badge-food">Food &amp; Drink</span></div>
-        </div>
-        <div class="qcard-body">
-          <div class="qcard-title">Rate Tonight's Bar</div>
-          <div class="qcard-desc">After ordering at a partner venue, rate your experience and write one honest sentence. Your review helps other students find the best spots.</div>
-          <div class="qcard-meta">
-            <span class="qcard-reward">🎁 Free tapa</span>
-            <span class="qcard-xp">+100 XP</span>
-          </div>
-        </div>
-        <div class="qcard-footer">
-          <span class="qcard-loc">📍 Any partner bar</span>
-          <a href="passport.html" class="qcard-cta">Play now →</a>
-        </div>
-      </div>
-
-      <!-- COMING SOON: drives traffic & transactions at partner venues -->
-      <div class="qcard">
-        <div class="qcard-top">
-          <div class="qcard-icon icon-magenta">🎶</div>
-          <div class="qcard-badges"><span class="qbadge badge-night">Nightlife</span></div>
-        </div>
-        <div class="qcard-body">
-          <div class="qcard-title">Dance for 60 Seconds</div>
-          <div class="qcard-desc">Hit the dancefloor at a partner bar and get a classmate to record you dancing for at least 60 seconds. Liquid courage sold separately.</div>
-          <div class="qcard-meta">
-            <span class="qcard-reward">🍸 Free cocktail</span>
-            <span class="qcard-xp">+150 XP</span>
-          </div>
-        </div>
-        <div class="qcard-footer">
-          <span class="qcard-loc">📍 Partner bars with dancefloor</span>
-          <a href="#" class="qcard-cta">Coming soon</a>
-        </div>
-      </div>
-
-      <div class="qcard">
-        <div class="qcard-top">
-          <div class="qcard-icon icon-magenta">🍖</div>
-          <div class="qcard-badges"><span class="qbadge badge-food">Food &amp; Drink</span></div>
-        </div>
-        <div class="qcard-body">
-          <div class="qcard-title">Try Cochinillo</div>
-          <div class="qcard-desc">Segovia's legendary roast suckling pig. Order it at a partner restaurant and drop your honest verdict — worth it or overrated?</div>
-          <div class="qcard-meta">
-            <span class="qcard-reward">🥩 Free side dish</span>
-            <span class="qcard-xp">+150 XP</span>
-          </div>
-        </div>
-        <div class="qcard-footer">
-          <span class="qcard-loc">📍 Partner restaurants</span>
-          <a href="#" class="qcard-cta">Coming soon</a>
-        </div>
-      </div>
-
-      <div class="qcard">
-        <div class="qcard-top">
-          <div class="qcard-icon icon-cyan">🏰</div>
-          <div class="qcard-badges"><span class="qbadge badge-popular">Popular</span><span class="qbadge badge-culture">Culture</span></div>
-        </div>
-        <div class="qcard-body">
-          <div class="qcard-title">Aqueduct Photo Drop</div>
-          <div class="qcard-desc">Snap a photo in front of the Roman Aqueduct, then head to a partner bar nearby and show your photo for a reward.</div>
-          <div class="qcard-meta">
-            <span class="qcard-reward">🎁 Surprise partner deal</span>
-            <span class="qcard-xp">+150 XP</span>
-          </div>
-        </div>
-        <div class="qcard-footer">
-          <span class="qcard-loc">📍 Plaza del Azoguejo</span>
-          <a href="#" class="qcard-cta">Coming soon</a>
-        </div>
-      </div>
-
-      <div class="qcard">
-        <div class="qcard-top">
-          <div class="qcard-icon icon-green">🤝</div>
-          <div class="qcard-badges"><span class="qbadge badge-social">Social</span></div>
-        </div>
-        <div class="qcard-body">
-          <div class="qcard-title">Introduce Two Strangers</div>
-          <div class="qcard-desc">Introduce two classmates who don't know each other at a partner bar. Record a 10-second clip of the three of you — instant social XP.</div>
-          <div class="qcard-meta">
-            <span class="qcard-reward">🎖 Special badge + 15% off</span>
-            <span class="qcard-xp">+200 XP</span>
-          </div>
-        </div>
-        <div class="qcard-footer">
-          <span class="qcard-loc">📍 Any partner venue</span>
-          <a href="#" class="qcard-cta">Coming soon</a>
-        </div>
-      </div>
-
-      <div class="qcard">
-        <div class="qcard-top">
-          <div class="qcard-icon icon-yellow">☕</div>
-          <div class="qcard-badges"><span class="qbadge badge-culture">Culture</span></div>
-        </div>
-        <div class="qcard-body">
-          <div class="qcard-title">Morning Café Trail</div>
-          <div class="qcard-desc">Visit a partner café before noon and order breakfast. Rate the coffee and pastry — helps us surface the best daytime spots in the city.</div>
-          <div class="qcard-meta">
-            <span class="qcard-reward">☕ Free coffee refill</span>
-            <span class="qcard-xp">+120 XP</span>
-          </div>
-        </div>
-        <div class="qcard-footer">
-          <span class="qcard-loc">📍 Partner cafés</span>
-          <a href="#" class="qcard-cta">Coming soon</a>
-        </div>
-      </div>
-
-      <div class="qcard">
-        <div class="qcard-top">
-          <div class="qcard-icon icon-magenta">🎟</div>
-          <div class="qcard-badges"><span class="qbadge badge-night">Nightlife</span></div>
-        </div>
-        <div class="qcard-body">
-          <div class="qcard-title">Bar Crawl — 3 Stops</div>
-          <div class="qcard-desc">Visit 3 different partner bars in one night and scan the QR code at each. Order at every stop — your passport gets stamped automatically.</div>
-          <div class="qcard-meta">
-            <span class="qcard-reward">🏆 Gold stamp + free last round</span>
-            <span class="qcard-xp">+300 XP</span>
-          </div>
-        </div>
-        <div class="qcard-footer">
-          <span class="qcard-loc">📍 3 partner bars</span>
-          <a href="#" class="qcard-cta">Coming soon</a>
-        </div>
-      </div>
-
+  <div class="hero-left">
+    <div class="hero-tag"><span class="live-dot"></span> 23 students active tonight</div>
+    <h1 class="hero-h1">
+      <span class="h1-line1">Conquer Segovia</span>
+      <span class="h1-line2">Like a Knight.</span>
+    </h1>
+    <p class="hero-sub">Complete quests at partner bars and restaurants. Earn free drinks, discounts, and legendary status on the leaderboard — one challenge at a time.</p>
+    <div class="hero-actions">
+      <a href="passport.html" class="btn-glow">⚔️ Start tonight's quest</a>
+      <a href="#quests" class="btn-outline">Browse all quests ↓</a>
     </div>
   </div>
 
-  <div class="section-divider"></div>
-
-  <!-- LEADERBOARD -->
-  <div id="leaderboard" style="scroll-margin-top:80px;">
-    <div class="sec-eyebrow">RANKINGS</div>
-    <div class="sec-title">Leaderboard</div>
-    <p class="sec-sub">Updated in real time. Complete more challenges to climb the ranks and unlock exclusive tier rewards.</p>
-
-    <div class="lb-layout">
-      <div class="lb-main">
-        <!-- Podium -->
-        <div class="lb-podium">
-          <div class="podium-col pod-2">
-            <div class="podium-avatar">S</div>
-            <div class="podium-name">Sofia J.</div>
-            <div class="podium-pts">980</div>
-            <div class="podium-bar"></div>
-          </div>
-          <div class="podium-col pod-1">
-            <div class="podium-avatar">M</div>
-            <div class="podium-name">Marco R.</div>
-            <div class="podium-pts">1240</div>
-            <div class="podium-bar"></div>
-          </div>
-          <div class="podium-col pod-3">
-            <div class="podium-avatar">P</div>
-            <div class="podium-name">Pedro K.</div>
-            <div class="podium-pts">870</div>
-            <div class="podium-bar"></div>
-          </div>
-        </div>
-
-        <!-- Table -->
-        <div class="lb-table">
-          <div class="lb-thead">
-            <div class="lb-th">#</div>
-            <div class="lb-th">Player</div>
-            <div class="lb-th">Quests</div>
-            <div class="lb-th">XP</div>
-          </div>
-          <div class="lb-trow">
-            <div class="lb-rank gold">1</div>
-            <div class="lb-player"><div class="lb-av lb-av-default">M</div><span class="lb-pname">Marco R.</span></div>
-            <div class="lb-challenges">12</div>
-            <div class="lb-score">1240</div>
-          </div>
-          <div class="lb-trow">
-            <div class="lb-rank silver">2</div>
-            <div class="lb-player"><div class="lb-av lb-av-default">S</div><span class="lb-pname">Sofia J.</span></div>
-            <div class="lb-challenges">9</div>
-            <div class="lb-score">980</div>
-          </div>
-          <div class="lb-trow">
-            <div class="lb-rank bronze">3</div>
-            <div class="lb-player"><div class="lb-av lb-av-default">P</div><span class="lb-pname">Pedro K.</span></div>
-            <div class="lb-challenges">8</div>
-            <div class="lb-score">870</div>
-          </div>
-          <div class="lb-trow">
-            <div class="lb-rank">4</div>
-            <div class="lb-player"><div class="lb-av lb-av-default">A</div><span class="lb-pname">Ana V.</span></div>
-            <div class="lb-challenges">7</div>
-            <div class="lb-score">740</div>
-          </div>
-          <div class="lb-trow">
-            <div class="lb-rank">5</div>
-            <div class="lb-player"><div class="lb-av lb-av-default">L</div><span class="lb-pname">Luca B.</span></div>
-            <div class="lb-challenges">6</div>
-            <div class="lb-score">640</div>
-          </div>
-          <div class="lb-trow">
-            <div class="lb-rank">6</div>
-            <div class="lb-player"><div class="lb-av lb-av-default">C</div><span class="lb-pname">Clara M.</span></div>
-            <div class="lb-challenges">5</div>
-            <div class="lb-score">510</div>
-          </div>
-          <div class="lb-trow">
-            <div class="lb-rank">7</div>
-            <div class="lb-player"><div class="lb-av lb-av-default">T</div><span class="lb-pname">Tom H.</span></div>
-            <div class="lb-challenges">4</div>
-            <div class="lb-score">430</div>
-          </div>
-          <div class="lb-trow me">
-            <div class="lb-rank mine">8</div>
-            <div class="lb-player"><div class="lb-av lb-av-me">E</div><span class="lb-pname mine">Emilio (you)</span></div>
-            <div class="lb-challenges">3</div>
-            <div class="lb-score mine">300</div>
-          </div>
-          <div class="lb-trow">
-            <div class="lb-rank">9</div>
-            <div class="lb-player"><div class="lb-av lb-av-default">R</div><span class="lb-pname">Rosa N.</span></div>
-            <div class="lb-challenges">2</div>
-            <div class="lb-score">210</div>
-          </div>
-          <div class="lb-trow">
-            <div class="lb-rank">10</div>
-            <div class="lb-player"><div class="lb-av lb-av-default">J</div><span class="lb-pname">Jorge P.</span></div>
-            <div class="lb-challenges">1</div>
-            <div class="lb-score">100</div>
-          </div>
-        </div>
+  <!-- MISSION CARD -->
+  <div class="mission-card">
+    <div class="mc-header">
+      <span class="mc-title">TONIGHT'S MISSION</span>
+      <span class="mc-badge">LIVE NOW</span>
+    </div>
+    <div class="mc-mission-title">The Knight's Route 🏰</div>
+    <div class="mc-steps">
+      <div class="mc-step">
+        <span class="mc-step-icon">🗣</span>
+        <span class="mc-step-text">Order in Spanish at a partner bar</span>
+        <span class="mc-step-xp">+100 XP</span>
       </div>
-
-      <div class="lb-side">
-        <div class="lb-side-card">
-          <div class="lb-side-title">YOUR STATS</div>
-          <div class="my-stat-row">
-            <div class="my-stat">
-              <div class="my-stat-val">#8</div>
-              <div class="my-stat-lbl">Rank</div>
-            </div>
-            <div class="my-stat">
-              <div class="my-stat-val">300</div>
-              <div class="my-stat-lbl">Total XP</div>
-            </div>
-            <div class="my-stat">
-              <div class="my-stat-val">3</div>
-              <div class="my-stat-lbl">Quests done</div>
-            </div>
-            <div class="my-stat">
-              <div class="my-stat-val">3</div>
-              <div class="my-stat-lbl">Stamps</div>
-            </div>
-          </div>
-          <div class="streak-box">
-            <div class="streak-emoji">🔥</div>
-            <div class="streak-text">You're on a <strong>5-day streak!</strong> Keep going to earn bonus XP.</div>
-          </div>
-        </div>
-        <div class="lb-side-card">
-          <div class="lb-side-title">NEXT TIER REWARD</div>
-          <div style="text-align:center;padding:1rem 0;">
-            <div style="font-size:2rem;margin-bottom:0.5rem;">🥈</div>
-            <div style="font-family:var(--font-display);font-size:1.1rem;font-weight:900;color:var(--yellow);margin-bottom:0.3rem;">SILVER EXPLORER</div>
-            <div style="font-size:0.78rem;color:rgba(255,255,255,0.3);line-height:1.5;">Reach <strong style="color:var(--white);">500 XP</strong> to unlock Silver tier and earn a free round at any partner bar.</div>
-            <div style="margin-top:1rem;height:5px;background:rgba(255,255,255,0.07);">
-              <div style="height:100%;width:60%;background:var(--yellow);"></div>
-            </div>
-            <div style="font-size:0.68rem;color:rgba(255,255,255,0.2);margin-top:0.4rem;">300 / 500 XP</div>
-          </div>
-        </div>
+      <div class="mc-step">
+        <span class="mc-step-icon">🥂</span>
+        <span class="mc-step-text">Bring 2+ classmates for a round</span>
+        <span class="mc-step-xp">+100 XP</span>
+      </div>
+      <div class="mc-step">
+        <span class="mc-step-icon">📸</span>
+        <span class="mc-step-text">Take a photo at Plaza Mayor</span>
+        <span class="mc-step-xp">+50 XP</span>
+      </div>
+      <div class="mc-step">
+        <span class="mc-step-icon">⭐</span>
+        <span class="mc-step-text">Rate your bar of the night</span>
+        <span class="mc-step-xp">+100 XP</span>
       </div>
     </div>
+    <div class="mc-reward">
+      <span class="mc-reward-icon">🎁</span>
+      <div class="mc-reward-text">Complete all 3 → unlock <strong>free round + Gold stamp</strong>. Valid tonight only.</div>
+    </div>
+    <a href="passport.html" class="mc-cta">Start the mission →</a>
   </div>
+</section>
 
-  <div class="section-divider"></div>
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <span class="stat-val">100+</span>
+    <span class="stat-lbl">Students signed up</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-val">12</span>
+    <span class="stat-lbl">Partner venues</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-val">9</span>
+    <span class="stat-lbl">Active quests</span>
+  </div>
+  <div class="stat-item">
+    <span class="stat-val">300+</span>
+    <span class="stat-lbl">Rewards claimed</span>
+  </div>
+</div>
 
-  <!-- FAQ -->
-  <div id="faq" style="scroll-margin-top:80px;">
-    <div class="faq-wrap">
-      <div class="faq-left-title">Got<br>Questions?<br><span>We Do Too.</span></div>
-      <div class="faq-list">
+<!-- ── PROGRESSION ── -->
+<section class="section" id="progress">
+  <div class="sec-eyebrow">YOUR JOURNEY</div>
+  <div class="sec-title">Level Up, Explorer</div>
+  <p class="sec-sub">Every quest earns XP. Every drink at a partner bar climbs your rank. Every stamp makes you legendary.</p>
 
-        <div class="faq-item open">
-          <div class="faq-q" onclick="toggleFaq(this)">
-            Is Segovia Passport only for nightlife?
-            <span class="faq-toggle">+</span>
+  <div class="progression-wrap">
+    <div class="level-card">
+      <div class="lc-avatar">
+        <img src="emilio.jpg" alt="Emilio" onerror="this.parentElement.style.display='none';document.getElementById('av-fallback').style.display='flex'">
+      </div>
+      <div id="av-fallback" class="lc-avatar-fallback" style="display:none">E</div>
+      <div class="lc-name">EMILIO</div>
+      <div class="lc-level">⭐ LEVEL 2 — EXPLORER</div>
+      <div class="xp-label"><span>120 XP</span><span>300 XP</span></div>
+      <div class="xp-track"><div class="xp-fill" style="width:40%"></div></div>
+      <div class="badges-title">EARNED BADGES</div>
+      <div class="badges-grid">
+        <div class="badge-item earned"><span class="badge-icon">🍺</span><span class="badge-name">First Drink</span></div>
+        <div class="badge-item earned"><span class="badge-icon">🗣</span><span class="badge-name">Polyglot</span></div>
+        <div class="badge-item earned"><span class="badge-icon">🥂</span><span class="badge-name">Squad Leader</span></div>
+        <div class="badge-item"><span class="badge-icon">🍸</span><span class="badge-name">Hidden Bar</span></div>
+        <div class="badge-item"><span class="badge-icon">🤝</span><span class="badge-name">Met 3 Locals</span></div>
+        <div class="badge-item"><span class="badge-icon">🌙</span><span class="badge-name">Survived Segovia</span></div>
+        <div class="badge-item"><span class="badge-icon">🏰</span><span class="badge-name">Alcázar Knight</span></div>
+        <div class="badge-item"><span class="badge-icon">🎖</span><span class="badge-name">Top 5 Weekly</span></div>
+      </div>
+    </div>
+
+    <!-- PLACE CARDS -->
+    <div>
+      <div class="sec-eyebrow" style="margin-bottom:0.4rem;">PARTNER VENUES</div>
+      <div class="sec-title" style="font-size:1.8rem;margin-bottom:0.5rem;">Tonight's Hot Spots</div>
+      <p style="font-size:0.82rem;color:rgba(255,255,255,0.3);margin-bottom:1.5rem;">All venues below have active quests. Order, complete the challenge, get the reward.</p>
+      <div class="places-grid">
+
+        <div class="place-card featured">
+          <div class="pc-banner pc-banner-tavern">🍷</div>
+          <div class="pc-body">
+            <div class="pc-name">José María</div>
+            <div class="pc-type">Traditional tavern · Old Town</div>
+            <div class="pc-tags">
+              <div class="pc-tag highlight">🎯 Quest available tonight</div>
+              <div class="pc-tag popular">👥 Popular with IE students</div>
+              <div class="pc-tag">🍖 Famous for cochinillo</div>
+              <div class="pc-tag reward">🎁 Free shot on first order</div>
+            </div>
           </div>
-          <div class="faq-a">Not at all. Challenges cover bars, restaurants, cafés, landmarks, language, and social experiences across the whole city. If a partner venue is involved, you can earn from it — morning coffee, lunch, or a night out.</div>
+          <div class="pc-footer">
+            <span class="pc-reward">+100 XP</span>
+            <a href="passport.html" class="pc-go">Go here →</a>
+          </div>
         </div>
 
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">
-            How do rewards work — what do I actually get?
-            <span class="faq-toggle">+</span>
+        <div class="place-card featured">
+          <div class="pc-banner pc-banner-bar">🍸</div>
+          <div class="pc-body">
+            <div class="pc-name">La Tasquina</div>
+            <div class="pc-type">Student bar · Calle de Valdeláguila</div>
+            <div class="pc-tags">
+              <div class="pc-tag highlight">🎯 Quest available tonight</div>
+              <div class="pc-tag popular">👥 Busiest on weekends</div>
+              <div class="pc-tag">🎶 Live DJ on Fridays</div>
+              <div class="pc-tag reward">🎁 10% off group rounds</div>
+            </div>
           </div>
-          <div class="faq-a">Each challenge has a specific reward — a free shot, 10% off your round, a free tapa, and so on. After your submission is approved, you get a reward code to show the bartender or staff. They honour it on the spot. No apps, no waiting.</div>
+          <div class="pc-footer">
+            <span class="pc-reward">+100 XP</span>
+            <a href="passport.html" class="pc-go">Go here →</a>
+          </div>
         </div>
 
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">
-            Is it free? Do I need to buy anything?
-            <span class="faq-toggle">+</span>
+        <div class="place-card">
+          <div class="pc-banner pc-banner-plaza">🏛</div>
+          <div class="pc-body">
+            <div class="pc-name">Bar El Abuelo</div>
+            <div class="pc-type">Classic tapas bar · Plaza Mayor</div>
+            <div class="pc-tags">
+              <div class="pc-tag highlight">🎯 Quest coming soon</div>
+              <div class="pc-tag">🍤 Best tapas in the square</div>
+              <div class="pc-tag">📍 Steps from the Aqueduct</div>
+              <div class="pc-tag reward">🎁 Free tapas on next visit</div>
+            </div>
           </div>
-          <div class="faq-a">Joining and playing is 100% free. Most challenges are set at partner venues and require you to order something (a drink, a dish) — that's how you participate and unlock the reward. You're spending what you'd already spend on a night out, just getting more back from it.</div>
+          <div class="pc-footer">
+            <span class="pc-reward">+120 XP</span>
+            <a href="#" class="pc-go">Coming soon</a>
+          </div>
         </div>
 
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">
-            How does the leaderboard work?
-            <span class="faq-toggle">+</span>
+        <div class="place-card">
+          <div class="pc-banner pc-banner-cafe">☕</div>
+          <div class="pc-body">
+            <div class="pc-name">Café Jeyma</div>
+            <div class="pc-type">Café & brunch · Calle Mayor</div>
+            <div class="pc-tags">
+              <div class="pc-tag highlight">🎯 Morning quest coming soon</div>
+              <div class="pc-tag">☀️ Open from 8am</div>
+              <div class="pc-tag">🥐 Best breakfast in the city</div>
+              <div class="pc-tag reward">🎁 Free coffee refill</div>
+            </div>
           </div>
-          <div class="faq-a">Every approved submission earns XP. More XP = higher rank. The leaderboard resets weekly so everyone gets a fresh shot. Top 3 players each week earn exclusive bonus rewards from our partner bars — announced every Monday.</div>
-        </div>
-
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">
-            Which bars are partner venues?
-            <span class="faq-toggle">+</span>
+          <div class="pc-footer">
+            <span class="pc-reward">+80 XP</span>
+            <a href="#" class="pc-go">Coming soon</a>
           </div>
-          <div class="faq-a">We're signing up bars and restaurants across Segovia right now. All active partner venues are shown on the challenge cards. More are being added every week — if your favourite spot isn't listed yet, stay tuned.</div>
-        </div>
-
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">
-            Can I do quests with friends?
-            <span class="faq-toggle">+</span>
-          </div>
-          <div class="faq-a">Yes — some challenges are specifically designed for groups (like Bring the Squad or Bar Crawl). Solo players earn XP too, but group challenges tend to give better rewards and are obviously more fun.</div>
-        </div>
-
-        <div class="faq-item">
-          <div class="faq-q" onclick="toggleFaq(this)">
-            What if my submission gets rejected?
-            <span class="faq-toggle">+</span>
-          </div>
-          <div class="faq-a">You can re-submit immediately. Rejections happen when the proof doesn't clearly match the challenge — for example, a blurry photo or a voice note that's too short. Fix it and resubmit — approvals usually land within minutes during active hours.</div>
         </div>
 
       </div>
     </div>
   </div>
+</section>
 
-</div>
+<div class="divider"></div>
 
-<!-- CTA BANNER -->
+<!-- ── QUESTS ── -->
+<section class="section" id="quests">
+  <div class="sec-eyebrow">ACTIVE &amp; UPCOMING</div>
+  <div class="sec-title">All Quests</div>
+  <p class="sec-sub">From the Tapas Trail to the Midnight Fortress Challenge — pick your adventure.</p>
+
+  <div class="filter-row">
+    <button class="chip on">All</button>
+    <button class="chip">🔴 Live now</button>
+    <button class="chip">🍷 Food &amp; Drink</button>
+    <button class="chip">🤝 Social</button>
+    <button class="chip">🌙 Nightlife</button>
+    <button class="chip">🏰 Landmarks</button>
+  </div>
+
+  <div class="quest-grid">
+
+    <div class="qcard live">
+      <div class="qcard-top">
+        <div class="qcard-icon icon-magenta">🗣</div>
+        <div class="qcard-badges"><span class="qbadge badge-live">LIVE</span><span class="qbadge badge-social">Social</span></div>
+      </div>
+      <div class="qcard-body">
+        <div class="qcard-title">Order in Spanish</div>
+        <div class="qcard-desc">Order your first drink entirely in Spanish at any partner bar. Record it — bartender included. Any language level welcome.</div>
+        <div class="qcard-meta"><span class="qcard-reward">🍺 Free shot</span><span class="qcard-xp">+100 XP</span></div>
+      </div>
+      <div class="qcard-footer"><span class="qcard-loc">📍 Any partner bar</span><a href="passport.html" class="qcard-cta">Play now →</a></div>
+    </div>
+
+    <div class="qcard live">
+      <div class="qcard-top">
+        <div class="qcard-icon icon-cyan">🥂</div>
+        <div class="qcard-badges"><span class="qbadge badge-live">LIVE</span><span class="qbadge badge-social">Social</span></div>
+      </div>
+      <div class="qcard-body">
+        <div class="qcard-title">Bring the Squad</div>
+        <div class="qcard-desc">Get 2+ classmates to a partner bar. Take a group selfie with drinks in hand — everyone gets 10% off the round.</div>
+        <div class="qcard-meta"><span class="qcard-reward">🥂 10% off the round</span><span class="qcard-xp">+100 XP</span></div>
+      </div>
+      <div class="qcard-footer"><span class="qcard-loc">📍 Any partner bar</span><a href="passport.html" class="qcard-cta">Play now →</a></div>
+    </div>
+
+    <div class="qcard live">
+      <div class="qcard-top">
+        <div class="qcard-icon icon-yellow">⭐</div>
+        <div class="qcard-badges"><span class="qbadge badge-live">LIVE</span><span class="qbadge badge-food">Food &amp; Drink</span></div>
+      </div>
+      <div class="qcard-body">
+        <div class="qcard-title">Tapas Trail</div>
+        <div class="qcard-desc">Name your favourite bar in Segovia and tell us why in one sentence. Your tip helps other students find the best spots — earns you free tapas.</div>
+        <div class="qcard-meta"><span class="qcard-reward">🎁 Free tapas</span><span class="qcard-xp">+100 XP</span></div>
+      </div>
+      <div class="qcard-footer"><span class="qcard-loc">📍 Any partner bar</span><a href="passport.html" class="qcard-cta">Play now →</a></div>
+    </div>
+
+    <div class="qcard">
+      <div class="qcard-top">
+        <div class="qcard-icon icon-magenta">🎶</div>
+        <div class="qcard-badges"><span class="qbadge badge-night">Nightlife</span></div>
+      </div>
+      <div class="qcard-body">
+        <div class="qcard-title">Dance for 60 Seconds</div>
+        <div class="qcard-desc">Hit the dancefloor at a partner bar and get someone to record you for 60 seconds straight. No excuses, no skipping.</div>
+        <div class="qcard-meta"><span class="qcard-reward">🍸 Free cocktail</span><span class="qcard-xp">+150 XP</span></div>
+      </div>
+      <div class="qcard-footer"><span class="qcard-loc">📍 Partner bars</span><a href="#" class="qcard-cta">Coming soon</a></div>
+    </div>
+
+    <div class="qcard">
+      <div class="qcard-top">
+        <div class="qcard-icon icon-magenta">🍖</div>
+        <div class="qcard-badges"><span class="qbadge badge-food">Food &amp; Drink</span><span class="qbadge badge-popular">Popular</span></div>
+      </div>
+      <div class="qcard-body">
+        <div class="qcard-title">Cochinillo Challenge</div>
+        <div class="qcard-desc">Order Segovia's legendary roast suckling pig at a partner restaurant. Drop a one-line verdict — worth it or overrated?</div>
+        <div class="qcard-meta"><span class="qcard-reward">🥩 Free side dish</span><span class="qcard-xp">+150 XP</span></div>
+      </div>
+      <div class="qcard-footer"><span class="qcard-loc">📍 Partner restaurants</span><a href="#" class="qcard-cta">Coming soon</a></div>
+    </div>
+
+    <div class="qcard">
+      <div class="qcard-top">
+        <div class="qcard-icon icon-cyan">🏰</div>
+        <div class="qcard-badges"><span class="qbadge badge-culture">Landmark</span></div>
+      </div>
+      <div class="qcard-body">
+        <div class="qcard-title">Midnight Fortress Challenge</div>
+        <div class="qcard-desc">Photo at the Alcázar after dark, then head to a partner bar and show your shot to unlock a surprise deal.</div>
+        <div class="qcard-meta"><span class="qcard-reward">🎁 Surprise partner deal</span><span class="qcard-xp">+200 XP</span></div>
+      </div>
+      <div class="qcard-footer"><span class="qcard-loc">📍 Alcázar de Segovia</span><a href="#" class="qcard-cta">Coming soon</a></div>
+    </div>
+
+    <div class="qcard">
+      <div class="qcard-top">
+        <div class="qcard-icon icon-green">🤝</div>
+        <div class="qcard-badges"><span class="qbadge badge-social">Social</span></div>
+      </div>
+      <div class="qcard-body">
+        <div class="qcard-title">Introduce Two Strangers</div>
+        <div class="qcard-desc">Introduce two classmates who don't know each other at a partner bar. Film the 10-second intro — social XP incoming.</div>
+        <div class="qcard-meta"><span class="qcard-reward">🎖 Badge + 15% off round</span><span class="qcard-xp">+200 XP</span></div>
+      </div>
+      <div class="qcard-footer"><span class="qcard-loc">📍 Any partner venue</span><a href="#" class="qcard-cta">Coming soon</a></div>
+    </div>
+
+    <div class="qcard">
+      <div class="qcard-top">
+        <div class="qcard-icon icon-yellow">☕</div>
+        <div class="qcard-badges"><span class="qbadge badge-culture">Culture</span></div>
+      </div>
+      <div class="qcard-body">
+        <div class="qcard-title">Morning Café Trail</div>
+        <div class="qcard-desc">Visit a partner café before noon, order breakfast, and rate the coffee. Helps surface the best daytime spots in Segovia.</div>
+        <div class="qcard-meta"><span class="qcard-reward">☕ Free coffee refill</span><span class="qcard-xp">+120 XP</span></div>
+      </div>
+      <div class="qcard-footer"><span class="qcard-loc">📍 Partner cafés</span><a href="#" class="qcard-cta">Coming soon</a></div>
+    </div>
+
+    <div class="qcard">
+      <div class="qcard-top">
+        <div class="qcard-icon icon-magenta">🎟</div>
+        <div class="qcard-badges"><span class="qbadge badge-night">Nightlife</span><span class="qbadge badge-popular">Popular</span></div>
+      </div>
+      <div class="qcard-body">
+        <div class="qcard-title">Bar Crawl — 3 Stops</div>
+        <div class="qcard-desc">Hit 3 different partner bars in one night. Order at each stop. Your passport gets stamped automatically — last stop earns a free round.</div>
+        <div class="qcard-meta"><span class="qcard-reward">🏆 Gold stamp + free last round</span><span class="qcard-xp">+300 XP</span></div>
+      </div>
+      <div class="qcard-footer"><span class="qcard-loc">📍 3 partner bars</span><a href="#" class="qcard-cta">Coming soon</a></div>
+    </div>
+
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── SOCIAL / WHO'S OUT ── -->
+<section class="section" id="social">
+  <div class="sec-eyebrow">SOCIAL</div>
+  <div class="sec-title">Who's Out Tonight</div>
+  <p class="sec-sub">Join classmates, form teams, and climb the leaderboard together.</p>
+
+  <div class="social-wrap">
+    <div class="whos-out">
+      <div class="wo-header">
+        <span class="wo-title">ACTIVE RIGHT NOW</span>
+        <span class="wo-count">● 23 online</span>
+      </div>
+      <div class="wo-list">
+        <div class="wo-row">
+          <div class="wo-av wo-av-emilio"><img src="emilio.jpg" alt="E" onerror="this.parentElement.innerHTML='E';this.parentElement.style.background='var(--cyan)';this.parentElement.style.color='#000';this.parentElement.style.justifyContent='center';this.parentElement.style.fontSize='0.85rem';this.parentElement.style.fontWeight='900'"></div>
+          <div class="wo-info"><div class="wo-name">Emilio (you) 👑</div><div class="wo-status">On quest · Knight's Route</div></div>
+          <span class="wo-dot dot-active"></span>
+          <div class="wo-loc">La Tasquina</div>
+        </div>
+        <div class="wo-row">
+          <div class="wo-av" style="background:rgba(255,0,204,0.15);color:var(--magenta);">S</div>
+          <div class="wo-info"><div class="wo-name">Sofia J.</div><div class="wo-status">Completed 2 quests tonight</div></div>
+          <span class="wo-dot dot-active"></span>
+          <div class="wo-loc">José María</div>
+        </div>
+        <div class="wo-row">
+          <div class="wo-av" style="background:rgba(0,229,255,0.1);color:var(--cyan);">M</div>
+          <div class="wo-info"><div class="wo-name">Marco R.</div><div class="wo-status">Leading the leaderboard 🔥</div></div>
+          <span class="wo-dot dot-active"></span>
+          <div class="wo-loc">Bar El Abuelo</div>
+        </div>
+        <div class="wo-row">
+          <div class="wo-av" style="background:rgba(255,230,0,0.1);color:var(--yellow);">A</div>
+          <div class="wo-info"><div class="wo-name">Ana V.</div><div class="wo-status">Looking for squad members</div></div>
+          <span class="wo-dot dot-active"></span>
+          <div class="wo-loc">Plaza Mayor</div>
+        </div>
+        <div class="wo-row">
+          <div class="wo-av" style="background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.3);">P</div>
+          <div class="wo-info"><div class="wo-name">Pedro K.</div><div class="wo-status">Just completed Bar Crawl</div></div>
+          <span class="wo-dot dot-recent"></span>
+          <div class="wo-loc">30 min ago</div>
+        </div>
+        <div class="wo-row">
+          <div class="wo-av" style="background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.3);">L</div>
+          <div class="wo-info"><div class="wo-name">Luca B.</div><div class="wo-status">Earned Hidden Bar badge</div></div>
+          <span class="wo-dot dot-recent"></span>
+          <div class="wo-loc">1h ago</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="team-card">
+      <div class="team-header">WEEKLY TEAM STANDINGS</div>
+      <div class="team-row">
+        <div class="team-pos gold">1</div>
+        <div class="team-avatars">
+          <div class="team-av">M</div><div class="team-av">S</div><div class="team-av">P</div>
+        </div>
+        <div class="team-name">Los Conquistadores</div>
+        <div class="team-pts">3420</div>
+      </div>
+      <div class="team-row">
+        <div class="team-pos silver">2</div>
+        <div class="team-avatars">
+          <div class="team-av">A</div><div class="team-av">L</div><div class="team-av">C</div>
+        </div>
+        <div class="team-name">Plaza Crew</div>
+        <div class="team-pts">2890</div>
+      </div>
+      <div class="team-row">
+        <div class="team-pos mine">3</div>
+        <div class="team-avatars">
+          <div class="team-av me-av"><img src="emilio.jpg" alt="E" onerror="this.parentElement.innerHTML='E'"></div>
+          <div class="team-av">T</div><div class="team-av">R</div>
+        </div>
+        <div class="team-name mine">Your Squad</div>
+        <div class="team-pts mine">1840</div>
+      </div>
+      <div style="margin-top:1.2rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.05);">
+        <div style="font-size:0.75rem;color:rgba(255,255,255,0.25);margin-bottom:0.75rem;">Top team wins a free private event at a partner bar this weekend.</div>
+        <a href="passport.html" style="display:block;text-align:center;font-family:var(--font-display);font-size:0.82rem;font-weight:700;letter-spacing:0.08em;color:var(--cyan);border:1px solid rgba(0,229,255,0.25);padding:9px;text-decoration:none;text-transform:uppercase;transition:all 0.15s;">Recruit squad members →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── SURPRISE REWARDS ── -->
+<section class="section">
+  <div class="sec-eyebrow">BONUS DROPS</div>
+  <div class="sec-title">Surprise Rewards</div>
+  <p class="sec-sub">Random dopamine hits. Complete quests and unlock mystery bonuses — you never know what drops next.</p>
+
+  <div class="surprise-grid">
+    <div class="surprise-card sc-mystery">
+      <span class="sc-icon">🎁</span>
+      <div class="sc-title">Mystery Reward</div>
+      <div class="sc-sub">Complete any 3 quests in one night to unlock a random prize. Could be anything.</div>
+      <span class="sc-tag">RANDOM DROP</span>
+    </div>
+    <div class="surprise-card sc-drink">
+      <span class="sc-icon">🍹</span>
+      <div class="sc-title">Free Drink Chance</div>
+      <div class="sc-sub">Every submission has a 1-in-5 chance of doubling your reward. Lucky nights exist.</div>
+      <span class="sc-tag">LUCKY SPIN</span>
+    </div>
+    <div class="surprise-card sc-event">
+      <span class="sc-icon">🎟</span>
+      <div class="sc-title">Event Invite</div>
+      <div class="sc-sub">Top XP earners get exclusive invites to private student events at partner venues.</div>
+      <span class="sc-tag">VIP ACCESS</span>
+    </div>
+    <div class="surprise-card sc-discount">
+      <span class="sc-icon">💸</span>
+      <div class="sc-title">Flash Discount</div>
+      <div class="sc-sub">24-hour discount codes dropped randomly to active players. Check your passport daily.</div>
+      <span class="sc-tag">LIMITED TIME</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── LEADERBOARD ── -->
+<section class="section" id="leaderboard">
+  <div class="sec-eyebrow">RANKINGS</div>
+  <div class="sec-title">Leaderboard</div>
+  <p class="sec-sub">Resets weekly. Top 3 earn bonus rewards from partner bars. Emilio, you're 8th — 570 XP from the top.</p>
+
+  <div class="lb-wrap">
+    <div class="lb-table">
+      <div class="lb-thead">
+        <div class="lb-th">#</div>
+        <div class="lb-th">Player</div>
+        <div class="lb-th">Quests</div>
+        <div class="lb-th">XP</div>
+      </div>
+      <div class="lb-trow"><div class="lb-rank gold">1</div><div class="lb-player"><div class="lb-av">M</div><span class="lb-pname">Marco R.</span></div><div class="lb-quests">12</div><div class="lb-score">1240</div></div>
+      <div class="lb-trow"><div class="lb-rank silver">2</div><div class="lb-player"><div class="lb-av">S</div><span class="lb-pname">Sofia J.</span></div><div class="lb-quests">9</div><div class="lb-score">980</div></div>
+      <div class="lb-trow"><div class="lb-rank bronze">3</div><div class="lb-player"><div class="lb-av">P</div><span class="lb-pname">Pedro K.</span></div><div class="lb-quests">8</div><div class="lb-score">870</div></div>
+      <div class="lb-trow"><div class="lb-rank">4</div><div class="lb-player"><div class="lb-av">A</div><span class="lb-pname">Ana V.</span></div><div class="lb-quests">7</div><div class="lb-score">740</div></div>
+      <div class="lb-trow"><div class="lb-rank">5</div><div class="lb-player"><div class="lb-av">L</div><span class="lb-pname">Luca B.</span></div><div class="lb-quests">6</div><div class="lb-score">640</div></div>
+      <div class="lb-trow"><div class="lb-rank">6</div><div class="lb-player"><div class="lb-av">C</div><span class="lb-pname">Clara M.</span></div><div class="lb-quests">5</div><div class="lb-score">510</div></div>
+      <div class="lb-trow"><div class="lb-rank">7</div><div class="lb-player"><div class="lb-av">T</div><span class="lb-pname">Tom H.</span></div><div class="lb-quests">4</div><div class="lb-score">430</div></div>
+      <div class="lb-trow me"><div class="lb-rank mine">8</div><div class="lb-player"><div class="lb-av me-av"><img src="emilio.jpg" alt="E" onerror="this.parentElement.innerHTML='E'"></div><span class="lb-pname mine">Emilio (you)</span></div><div class="lb-quests">3</div><div class="lb-score mine">300</div></div>
+      <div class="lb-trow"><div class="lb-rank">9</div><div class="lb-player"><div class="lb-av">R</div><span class="lb-pname">Rosa N.</span></div><div class="lb-quests">2</div><div class="lb-score">210</div></div>
+      <div class="lb-trow"><div class="lb-rank">10</div><div class="lb-player"><div class="lb-av">J</div><span class="lb-pname">Jorge P.</span></div><div class="lb-quests">1</div><div class="lb-score">100</div></div>
+    </div>
+
+    <div>
+      <div class="lb-side-card">
+        <div class="lb-side-title">YOUR STATS</div>
+        <div class="my-stats">
+          <div class="my-stat"><div class="my-stat-val">#8</div><div class="my-stat-lbl">Rank</div></div>
+          <div class="my-stat"><div class="my-stat-val">300</div><div class="my-stat-lbl">Total XP</div></div>
+          <div class="my-stat"><div class="my-stat-val">3</div><div class="my-stat-lbl">Quests</div></div>
+          <div class="my-stat"><div class="my-stat-val">🔥5</div><div class="my-stat-lbl">Day streak</div></div>
+        </div>
+      </div>
+      <div class="next-tier">
+        <div class="nt-icon">🥈</div>
+        <div class="nt-title">SILVER EXPLORER</div>
+        <div class="nt-sub">Reach <strong style="color:#fff;">500 XP</strong> to unlock Silver tier — free round at any partner bar.</div>
+        <div class="nt-bar-wrap"><div class="nt-bar" style="width:60%"></div></div>
+        <div class="nt-progress">300 / 500 XP</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- ── FAQ ── -->
+<section class="section" id="faq">
+  <div class="faq-wrap">
+    <div class="faq-sticky-title">Got<br>Questions?<br><span>We got you.</span></div>
+    <div class="faq-list">
+      <div class="faq-item open">
+        <div class="faq-q" onclick="toggleFaq(this)">Is this only for nightlife? <span class="faq-toggle">+</span></div>
+        <div class="faq-a">Not at all. While many challenges happen at bars, we also have morning café quests, food trails, landmark challenges, and social missions across the whole city. If there's a partner venue involved, you can earn from it — day or night.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">How do rewards actually work? <span class="faq-toggle">+</span></div>
+        <div class="faq-a">Each challenge has a specific reward — a free shot, 10% off your round, free tapas, etc. Once your submission is approved you get a reward code. Show it to the bartender or staff and they honour it immediately. No waiting, no apps to scan.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Is it free? Do I need to buy anything? <span class="faq-toggle">+</span></div>
+        <div class="faq-a">Playing is 100% free. Most challenges are set at partner venues and require you to order something — a drink, a dish — which is how you participate and unlock the reward. You're spending what you'd spend on a night out anyway, just getting more back from it.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">How does the leaderboard work? <span class="faq-toggle">+</span></div>
+        <div class="faq-a">Every approved submission earns XP. More XP = higher rank. The leaderboard resets weekly. Top 3 players each week earn exclusive bonus rewards from partner bars, announced every Monday.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">Which venues are partner bars? <span class="faq-toggle">+</span></div>
+        <div class="faq-a">We're signing up bars, restaurants, and cafés across Segovia right now. All active partner venues show up on the quest cards. More are added every week — if your favourite spot isn't on yet, it probably will be soon.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">What if my submission gets rejected? <span class="faq-toggle">+</span></div>
+        <div class="faq-a">You can resubmit immediately. Rejections happen when the proof doesn't clearly match the challenge — blurry photo, too-short voice note. Fix it and resubmit. Approvals usually land within minutes during active evening hours.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA BANNER ── -->
 <div class="cta-banner">
-  <div>
-    <div class="cta-title">Ready to explore<br>Segovia?</div>
-    <div class="cta-sub">Jump into your passport and start earning rewards tonight.</div>
+  <div class="cta-title">Ready to conquer<br>Segovia tonight?</div>
+  <p class="cta-sub">Open your passport and start the first challenge. Takes 30 seconds.</p>
+  <div class="cta-actions">
+    <a href="passport.html" class="btn-glow">⚔️ Open my passport</a>
+    <a href="index.html" class="btn-outline">Learn more</a>
   </div>
-  <a href="passport.html" class="btn-white">Open my passport →</a>
 </div>
 
 <!-- FOOTER -->
@@ -627,21 +868,18 @@ body { font-family: var(--font-body); background: var(--black); color: var(--whi
 
 <script>
 function toggleFaq(el) {
-  var item = el.parentElement;
-  item.classList.toggle('open');
+  el.parentElement.classList.toggle('open');
 }
-
-document.querySelectorAll('.tab').forEach(function(tab) {
-  tab.addEventListener('click', function(e) {
-    document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
-    tab.classList.add('active');
-  });
-});
-
 document.querySelectorAll('.chip').forEach(function(chip) {
   chip.addEventListener('click', function() {
     document.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('on'); });
     chip.classList.add('on');
+  });
+});
+document.querySelectorAll('.tab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); });
+    tab.classList.add('active');
   });
 });
 </script>
