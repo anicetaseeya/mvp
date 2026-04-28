@@ -260,9 +260,8 @@ body { font-family: var(--font-body); background: var(--black); color: var(--whi
     </div>
 
     <!-- Header -->
-    <div class="ch-eyebrow">TONIGHT'S CHALLENGES · PARTNER BARS</div>
-    <h1 class="ch-title">Your night,<br><span class="ch-accent">Emilio.</span></h1>
-    <p style="font-size:0.82rem;color:rgba(255,255,255,0.28);margin-bottom:2rem;line-height:1.6;">Complete all 3 challenges at partner bars. Each challenge requires a purchase — your drink unlocks the reward. Free for you to play, always.</p>
+    <div class="ch-eyebrow">TONIGHT'S CHALLENGES</div>
+    <h1 class="ch-title">Prove yourself,<br><span class="ch-accent">Emilio.</span></h1>
 
     <!-- CHALLENGE 1: VOICE -->
     <div class="cc active" id="cc-0">
@@ -270,18 +269,17 @@ body { font-family: var(--font-body); background: var(--black); color: var(--whi
       <div class="cc-right">
         <div class="cc-toprow">
           <div>
-            <div class="cc-title">Order in Spanish</div>
-            <div class="cc-sub">Walk up to the bar at any partner venue and order your first drink entirely in Spanish. Record yourself doing it — bartender included. 🍺 Unlocks a free shot.</div>
+            <div class="cc-title">Speak in another language</div>
+            <div class="cc-sub">Walk up to someone nearby and say anything in a foreign language — record it as proof</div>
           </div>
           <div class="cc-pill pill-active" id="ccp-0">ACTIVE</div>
         </div>
         <div class="cc-body" id="ccb-0">
-          <div style="font-size:0.72rem;color:rgba(255,230,0,0.5);margin-bottom:0.3rem;">📍 Any partner bar &nbsp;·&nbsp; Purchase required to unlock reward</div>
           <div class="rec-ind" id="rec-ind">
             <span class="rec-dot"></span> Recording…
           </div>
           <button class="cbtn cbtn-voice" id="mic-btn" onclick="toggleRec()">
-            🎤 &nbsp;Record your order
+            🎤 &nbsp;Hold to record voice
           </button>
           <button class="cbtn cbtn-submit" id="sub-0" onclick="submit(0)" disabled>
             Submit voice memo
@@ -296,15 +294,14 @@ body { font-family: var(--font-body); background: var(--black); color: var(--whi
       <div class="cc-right">
         <div class="cc-toprow">
           <div>
-            <div class="cc-title">Bring the squad</div>
-            <div class="cc-sub">Get 2+ classmates to join you at a partner bar and take a group selfie with drinks in hand. More people = more fun = 10% off the whole round. 🥂</div>
+            <div class="cc-title">Selfie with a classmate</div>
+            <div class="cc-sub">Find someone nearby and take a selfie together — two people minimum</div>
           </div>
           <div class="cc-pill pill-locked" id="ccp-1">LOCKED</div>
         </div>
         <div class="cc-body" id="ccb-1" style="display:none">
-          <div style="font-size:0.72rem;color:rgba(255,230,0,0.5);margin-bottom:0.7rem;">📍 Any partner bar &nbsp;·&nbsp; Group must order to claim 10% off</div>
-          <div class="photo-prev" id="photo-prev">📷 &nbsp;Squad photo captured!</div>
-          <button class="cbtn cbtn-photo" id="cam-btn" onclick="takePhoto()">📷 &nbsp;Take squad selfie</button>
+          <div class="photo-prev" id="photo-prev">📷 &nbsp;Photo captured!</div>
+          <button class="cbtn cbtn-photo" id="cam-btn" onclick="takePhoto()">📷 &nbsp;Take selfie</button>
           <button class="cbtn cbtn-submit" id="sub-1" onclick="submit(1)" disabled>Submit photo</button>
         </div>
       </div>
@@ -317,14 +314,13 @@ body { font-family: var(--font-body); background: var(--black); color: var(--whi
         <div class="cc-toprow">
           <div>
             <div class="cc-title">Name your favourite bar in Segovia</div>
-            <div class="cc-sub">What's your go-to spot? Drop the name and one line about why it's great — helps other students find the best places in the city. 🎁 Earns free tapas.</div>
+            <div class="cc-sub">Drop the name of your go-to spot in Segovia — helps other students discover the best places</div>
           </div>
           <div class="cc-pill pill-locked" id="ccp-2">LOCKED</div>
         </div>
         <div class="cc-body" id="ccb-2" style="display:none">
-          <div style="font-size:0.72rem;color:rgba(255,230,0,0.5);margin-bottom:0.7rem;">📍 Any partner bar &nbsp;·&nbsp; Must have ordered a drink first</div>
-          <input class="cc-input" id="bar-inp" type="text" placeholder="e.g. Bar El Abuelo — best atmosphere in Segovia" oninput="checkBar()">
-          <button class="cbtn cbtn-submit" id="sub-2" onclick="submit(2)" disabled>Submit review</button>
+          <input class="cc-input" id="bar-inp" type="text" placeholder="e.g. Bar El Abuelo, La Tasquina…" oninput="checkBar()">
+          <button class="cbtn cbtn-submit" id="sub-2" onclick="submit(2)" disabled>Submit answer</button>
         </div>
       </div>
     </div>
